@@ -1,0 +1,461 @@
+{
+  "nav": {
+    "home": "首页",
+    "pricing": "价格",
+    "about": "关于我们",
+    "contact": "联系销售"
+  },
+  "buttons": {
+    "generating": "生成中...",
+    "generate": "生成",
+    "next": "使用此模特",
+    "backToModels": "返回模特选择",
+    "undo": "撤销",
+    "redo": "重做",
+    "processing": "处理中...",
+    "browse": "浏览文件",
+    "replaceGarment": "替换服装",
+    "downloadImage": "下载图片",
+    "refineAI": "AI 优化",
+    "refineManual": "编辑",
+    "refining": "优化中...",
+    "applyGarment": "应用",
+    "applying": "应用中...",
+    "saveChanges": "保存更改",
+    "cancel": "取消",
+    "collect": "收藏",
+    "remove": "移除",
+    "swapModel": "更换模特",
+    "changeBackground": "更换背景",
+    "batchGenerate": "批量生成",
+    "random": "随机",
+    "custom": "自定义",
+    "close": "关闭",
+    "myCollection": "我的收藏",
+    "liveSession": "实时会话",
+    "fixDetail": "修复细节"
+  },
+  "modelCreation": {
+    "title": "创建您的虚拟模特",
+    "subtitle": "选择以下标准，生成最能代表您目标客户的模特。",
+    "mainTitle": "AI 虚拟试衣工作室",
+    "mainSubtitle": "生成超写实模特，搭配您的服装进行造型，并在几分钟内创建出令人惊艳的产品图片。电子商务的未来就在这里。",
+    "howItWorks": {
+      "title": "工作流程",
+      "step1": {
+        "title": "1. 提供模特",
+        "description": "通过上传服装使用我们的智能匹配功能，或通过详细标准从零开始创建自定义模特。"
+      },
+      "step2": {
+        "title": "2. 造型与姿势",
+        "description": "上传您的服装，从数十种专业姿势中选择，并完善整体造型。"
+      },
+      "step3": {
+        "title": "3. 生成图片",
+        "description": "我们的AI会生成高分辨率、照片般逼真的图片，可随时用于您的电商平台或营销活动。"
+      }
+    },
+    "create": {
+      "title": "创建自定义模特",
+      "subtitle": "精细调整每个细节，生成完美模特。"
+    },
+    "smartMatch": {
+      "mainTitle": "根据服装智能匹配",
+      "mainSubtitle": "上传服装照片，让AI生成完美匹配的模特。",
+      "title": "智能匹配",
+      "subtitle": "已有服装图片？上传它，我们将立即为您生成最匹配的模特。",
+      "loading": "正在分析风格并创建模特...",
+      "cta": "拖放或点击上传"
+    },
+    "primaryFeatures": "主要特征",
+    "bodyDetails": "身体细节",
+    "photographyStyle": "摄影风格",
+    "generatedModel": "生成的模特",
+    "createModel": {
+      "title": "创建模特"
+    },
+    "myCollection": {
+      "title": "我的收藏",
+      "subtitle": "选择一个已保存的模特开始新的会话。",
+      "empty": "您的收藏是空的。生成并收藏一些模特吧！"
+    },
+    "or": "或"
+  },
+  "smartMatchResult": {
+    "title": "智能匹配结果",
+    "generatedModel": "生成的模特",
+    "yourGarment": "您的服装",
+    "inferredCriteria": "系统推断标准",
+    "goBack": "返回重试",
+    "confirm": "确认并开始"
+  },
+  "modelCriteria": {
+    "nationality": "国籍",
+    "gender": "性别",
+    "skinTone": "肤色",
+    "ageRange": "年龄范围",
+    "faceShape": "脸型",
+    "eyeColor": "眼睛颜色",
+    "hairColor": "发色",
+    "hairStyle": "发型",
+    "expression": "表情",
+    "shotType": "拍摄类型",
+    "cameraAngle": "相机角度",
+    "lightingStyle": "灯光风格",
+    "lensType": "镜头类型",
+    "heightRange": "身高",
+    "customHeight": "自定义身高 (cm)",
+    "build": "体型"
+  },
+  "workspace": {
+    "title": "虚拟试衣",
+    "sidebar": {
+        "workspace": "工作区",
+        "myProjects": "我的项目",
+        "saveProject": "保存项目"
+    },
+    "loading": {
+        "generatingPose": "正在生成姿势...",
+        "resegmenting": "正在重新分割...",
+        "applyingGarment": "正在应用服装..."
+    },
+    "selectPose": "选择姿势",
+    "posedModel": "模特预览",
+    "posedModelPlaceholder": "请选择一个姿势以生成模特。",
+    "upload": {
+        "title": "上传您的服装",
+        "subtitle": "拖放文件或浏览您的电脑",
+        "successTitle": "上传成功！",
+        "successSubtitle": "准备试穿。上传另一件以替换。"
+    },
+    "segment": {
+        "original": "原始图片",
+        "segmented": "分割后",
+        "originalAlt": "已上传的服装",
+        "segmentedAlt": "已分割的服装",
+        "resegmentPrompt": "分割不正确？请重试：",
+        "editTitle": "编辑分割",
+        "tool": "工具",
+        "brushSize": "画笔大小"
+    },
+    "livePreview": "实时预览",
+    "previewPlaceholder": "您的最终图片将在此处显示。",
+    "previewReady": "准备应用服装。",
+    "finalImageAlt": "最终试穿效果",
+    "fabricType": "面料类型"
+  },
+  "styling": {
+    "title": "造型面板",
+    "top": "上装",
+    "bottom": "下装",
+    "upload": "上传",
+    "library": "素材库",
+    "source": "来源",
+    "selectTop": "选择上装",
+    "selectBottom": "选择下装"
+  },
+  "stylingLibrary": {
+    "white_t-shirt": "白色T恤",
+    "black_tank_top": "黑色背心",
+    "blue_jeans": "蓝色牛仔裤",
+    "black_trousers": "黑色长裤",
+    "denim_skirt": "牛仔裙"
+  },
+  "errors": {
+    "generateModels": "生成模特失败。请重试。",
+    "generatePose": "生成姿势“{{poseName}}”失败。",
+    "virtualTryOn": "虚拟试穿失败。请尝试使用不同的图片。",
+    "segmentGarment": "分割服装失败。请尝试使用更清晰的图片。",
+    "resegmentGarment": "重新分割服装失败。请重试。",
+    "segmentationFailed": "分割失败",
+    "refineGarment": "优化分割失败。请重试。",
+    "changeBackground": "更换背景失败，请重试。",
+    "rateLimitExceeded": "您发送的请求过多。请稍等片刻再试。",
+    "smartMatchFailed": "智能匹配失败。请重试或手动创建模特。",
+    "analyzeGarment": "分析服装风格失败，请重试。",
+    "generationFailed": "生成失败。",
+    "safetyBlock": "生成失败，请尝试调整您的描述或设置。",
+    "liveSessionPermissions": "实时会话需要相机和麦克风权限。",
+    "liveSessionFailed": "实时会话连接失败。请重试。",
+    "inpaintingFailed": "修复细节失败。请重试。"
+  },
+  "swapModelModal": {
+    "title": "更换模特",
+    "selectMethod": "您想如何更换模特？",
+    "randomSubtitle": "正在为您生成4个随机模特以供选择。",
+    "customSubtitle": "为新模特定义确切的标准。",
+    "generating": "生成中...",
+    "selectOne": "选择一个应用到您的图片。"
+  },
+  "changeBackgroundModal": {
+    "title": "更换背景",
+    "presets": "预设",
+    "customPrompt": "或者描述您自己的背景",
+    "customPlaceholder": "例如，黄昏时的未来城市景观",
+    "generating": "正在生成背景..."
+  },
+  "batchProcessingModal": {
+    "title": "批量生成",
+    "selectModels": "1. 选择模特",
+    "selectPoses": "2. 选择姿势",
+    "review": "3. 预览并生成",
+    "summary": "{{modelCount}} 个模特 × {{poseCount}} 个姿势 = {{total}} 张图片",
+    "start": "开始生成",
+    "generating": "正在生成第 {{current}} / {{total}} 张图片...",
+    "complete": "生成完成",
+    "downloadAll": "全部下载",
+    "noModels": "您的收藏中没有可选择的模特。",
+    "error": "错误"
+  },
+  "myProjectsModal": {
+    "title": "我的项目",
+    "empty": "您没有已保存的项目。",
+    "load": "加载",
+    "delete": "删除",
+    "namePrompt": "为您的项目输入一个名称：",
+    "defaultProjectName": "项目"
+  },
+  "liveSessionModal": {
+    "title": "实时造型会话",
+    "description": "与我们的AI造型师开始实时视频聊天。展示您的服装，获取实时反馈和建议。",
+    "start": "开始会话",
+    "end": "结束会话",
+    "connecting": "连接中...",
+    "active": "会话进行中",
+    "you": "您",
+    "stylist": "造型师"
+  },
+  "inpaintingModal": {
+    "title": "修复细节",
+    "instruction": "1. 使用画笔遮盖您想更改的区域。",
+    "promptLabel": "2. 描述您想如何修正：",
+    "promptPlaceholder": "例如，将标志更改为红色圆形",
+    "correcting": "修正中..."
+  },
+  "downloadModal": {
+    "title": "下载图片",
+    "standardJPG": "标准 (JPG)",
+    "standardJPGDescription": "画质良好，文件较小。",
+    "originalPNG": "原始 (PNG)",
+    "originalPNGDescription": "最高画质，文件较大。",
+    "aiEnhance4K": "AI 增强 (4K)",
+    "aiEnhance4KDescription": "使用 AI 提升至 4K 分辨率，请稍候。",
+    "upscaling": "正在增强...",
+    "errorUpscaling": "AI 增强失败，请重试。"
+  },
+  "toasts": {
+    "projectSaved": "项目已成功保存！",
+    "projectLoaded": "项目已加载。",
+    "projectDeleted": "项目已删除。"
+  },
+  "backgroundPresets": {
+    "studio_white": "白色影棚",
+    "outdoor_cafe": "户外咖啡馆",
+    "city_night": "城市夜景",
+    "beach_sunset": "海滩日落",
+    "modern_loft": "现代阁楼",
+    "forest_path": "森林小径"
+  },
+  "nationalities": {
+    "american": "美国",
+    "argentinian": "阿根廷",
+    "australian": "澳大利亚",
+    "brazilian": "巴西",
+    "british": "英国",
+    "canadian": "加拿大",
+    "chinese": "中国",
+    "colombian": "哥伦比亚",
+    "egyptian": "埃及",
+    "ethiopian": "埃塞오피아",
+    "filipino": "菲律宾",
+    "french": "法国",
+    "german": "德国",
+    "ghanaian": "加纳",
+    "indian": "印度",
+    "iranian": "伊朗",
+    "italian": "意大利",
+    "japanese": "日本",
+    "kenyan": "肯尼亚",
+    "korean": "韩国",
+    "mexican": "墨西哥",
+    "new_zealander": "新西兰",
+    "nigerian": "尼日利亚",
+    "polish": "波兰",
+    "russian": "俄罗斯",
+    "saudi_arabian": "沙特阿拉伯",
+    "south_african": "南非",
+    "spanish": "西班牙",
+    "swedish": "瑞典",
+    "thai": "泰国",
+    "turkish": "土耳其",
+    "ukrainian": "乌克兰",
+    "vietnamese": "越南"
+  },
+  "genders": {
+    "female": "女性",
+    "male": "男性"
+  },
+  "skinTones": {
+    "fair": "白皙",
+    "light": "浅色",
+    "medium": "中等",
+    "olive": "橄榄色",
+    "tan": "晒黑",
+    "dark": "深色"
+  },
+  "ageRanges": {
+    "18-25": "18-25",
+    "26-35": "26-35",
+    "36-45": "36-45",
+    "46-55": "46-55"
+  },
+  "builds": {
+    "slim": "苗条",
+    "athletic": "健美",
+    "well-proportioned": "匀称",
+    "curvy": "丰满",
+    "plus-sized": "大码",
+    "pregnant": "孕妇"
+  },
+  "heightRanges": {
+    "petite": "娇小 (<165cm)",
+    "average": "平均 (165-175cm)",
+    "tall": "高挑 (>175cm)",
+    "custom": "自定义"
+  },
+  "hairColors": {
+    "black": "黑色",
+    "brown": "棕色",
+    "blonde": "金色",
+    "red": "红色",
+    "gray": "灰色",
+    "white": "白色"
+  },
+  "hairStyles": {
+    "long_straight": "长直发",
+    "long_wavy": "长波浪",
+    "long_curly": "长卷发",
+    "medium_wavy": "中长波浪",
+    "medium_straight": "中长直发",
+    "short_bob": "波波头",
+    "pixie_cut": "精灵短发",
+    "curly_afro": "爆炸头",
+    "high_ponytail": "高马尾",
+    "elegant_updo": "优雅盘发",
+    "box_braids": "盒式辫",
+    "messy_bun": "凌乱丸子头",
+    "wavy_lob": "波浪长波波头",
+    "bangs": "刘海",
+    "shag_cut": "层次剪",
+    "cornrows": "垄沟辫",
+    "dreadlocks": "脏辫",
+    "top_knot": "顶髻",
+    "french_braid": "法式辫",
+    "fishtail_braid": "鱼尾辫",
+    "space_buns": "太空丸子头",
+    "short_and_tidy": "短发整洁",
+    "crew_cut": "平头",
+    "slicked_back": "后梳",
+    "undercut": "底切",
+    "fade": "渐变",
+    "man_bun": "男士丸子头",
+    "curly_top": "卷顶",
+    "quiff": "飞机头",
+    "buzz_cut": "寸头",
+    "pompadour": "庞毕度发型",
+    "comb_over": "梳理",
+    "french_crop": "法式短发",
+    "textured_crop": "纹理短发",
+    "spiky_hair": "刺猬头",
+    "side_part": "侧分",
+    "mohawk": "莫霍克发型"
+  },
+  "eyeColors": {
+    "brown": "棕色",
+    "blue": "蓝色",
+    "green": "绿色",
+    "hazel": "淡褐色",
+    "gray": "灰色"
+  },
+  "faceShapes": {
+    "oval": "椭圆形",
+    "round": "圆形",
+    "square": "方形",
+    "heart": "心形",
+    "diamond": "菱形"
+  },
+  "expressions": {
+    "neutral": "自然",
+    "smiling": "微笑",
+    "serious": "严肃",
+    "thoughtful": "沉思",
+    "confident": "自信"
+  },
+  "shotTypes": {
+    "close-up_portrait": "特写肖像",
+    "medium_shot": "中景",
+    "cowboy_shot": "牛仔镜头",
+    "full_body_shot": "全身图"
+  },
+  "cameraAngles": {
+    "eye-level": "平视",
+    "slightly_high_angle": "微俯",
+    "slightly_low_angle": "微仰"
+  },
+  "lightingStyles": {
+    "soft_studio_light": "柔和摄影棚光",
+    "dramatic_rim_light": "戏剧性轮廓光",
+    "cinematic_lighting": "电影感灯光",
+    "golden_hour_glow": "黄金时刻光辉"
+  },
+  "lensTypes": {
+    "85mm_portrait_lens_(f_1.4)": "85mm 肖像镜头 (f/1.4)",
+    "50mm_standard_lens_(f_1.8)": "50mm 标准镜头 (f/1.8)",
+    "35mm_environmental_lens_(f_2.0)": "35mm 环境镜头 (f/2.0)"
+  },
+  "poses": {
+    "classic_front": "经典正面",
+    "three_quarter_stand": "四分之三站姿",
+    "contrapposto_lean": "对立式平衡",
+    "hands_in_pockets": "双手插袋",
+    "one_hand_on_hip": "单手叉腰",
+    "walking_step": "行走姿势",
+    "over_the_shoulder": "回头看",
+    "crossed_arms": "双臂交叉",
+    "wall_lean": "倚墙",
+    "stool_edge_sit": "凳边坐",
+    "seated_forward_lean": "坐姿前倾",
+    "hair_tuck": "撩发",
+    "hem_pinch": "捏衣角",
+    "pocket_emphasis": "手插口袋",
+    "hood_up": "戴上兜帽",
+    "cuff_adjust": "调整袖口",
+    "bag_carry_side": "侧提包",
+    "toe_point_lift": "抬腿点地",
+    "twirl": "旋转",
+    "back_view_head_turn": "背影回头",
+    "side_profile": "侧面站姿",
+    "floor_sit_casual": "休闲坐地",
+    "chair_backwards": "反骑椅子",
+    "phone_in_hand": "手持手机",
+    "zip_up": "拉拉链",
+    "waist_grip": "双手放腰",
+    "sleeve_roll": "卷袖子",
+    "hat_tip": "轻触帽檐",
+    "accessory_frame": "展示配饰",
+    "fabric_stretch": "拉伸面料"
+  },
+  "garmentTypes": {
+    "full_outfit": "整套服装",
+    "top_only": "仅上衣",
+    "bottom_only": "仅下装"
+  },
+  "fabricTypes": {
+    "none": "无",
+    "cotton": "棉",
+    "silk": "丝绸",
+    "denim": "牛仔布",
+    "leather": "皮革",
+    "wool": "羊毛"
+  }
+}

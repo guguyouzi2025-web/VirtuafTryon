@@ -1,0 +1,461 @@
+{
+  "nav": {
+    "home": "Home",
+    "pricing": "Pricing",
+    "about": "About Us",
+    "contact": "Contact Sales"
+  },
+  "buttons": {
+    "generating": "Generating...",
+    "generate": "Generate",
+    "next": "Use This Model",
+    "backToModels": "Back to Models",
+    "undo": "Undo",
+    "redo": "Redo",
+    "processing": "Processing...",
+    "browse": "Browse files",
+    "replaceGarment": "Replace Garment",
+    "downloadImage": "Download Image",
+    "refineAI": "Refine (AI)",
+    "refineManual": "Edit",
+    "refining": "Refining...",
+    "applyGarment": "Apply",
+    "applying": "Applying...",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "collect": "Collect",
+    "remove": "Remove",
+    "swapModel": "Swap Model",
+    "changeBackground": "Change Background",
+    "batchGenerate": "Batch Generate",
+    "random": "Random",
+    "custom": "Custom",
+    "close": "Close",
+    "myCollection": "My Collection",
+    "liveSession": "Live Session",
+    "fixDetail": "Fix Detail"
+  },
+  "modelCreation": {
+    "title": "Create Your Virtual Model",
+    "subtitle": "Select the criteria below to generate a model that best represents your target customer.",
+    "mainTitle": "AI-Powered Virtual Try-On Studio",
+    "mainSubtitle": "Generate hyper-realistic models, style them with your garments, and create stunning product imagery in minutes. The future of e-commerce is here.",
+    "howItWorks": {
+      "title": "How It Works",
+      "step1": {
+        "title": "1. Provide a Model",
+        "description": "Use our Smart Match by uploading a garment, or create a custom model from scratch with detailed criteria."
+      },
+      "step2": {
+        "title": "2. Style & Pose",
+        "description": "Upload your garment, choose from dozens of professional poses, and perfect the look."
+      },
+      "step3": {
+        "title": "3. Generate Image",
+        "description": "Our AI generates a high-resolution, photorealistic image ready for your e-commerce store or marketing campaign."
+      }
+    },
+    "create": {
+      "title": "Create a Custom Model",
+      "subtitle": "Fine-tune every detail to generate the perfect model."
+    },
+    "smartMatch": {
+      "mainTitle": "Smart Match from Garment",
+      "mainSubtitle": "Upload a garment photo and let AI generate a perfectly matched model.",
+      "title": "Smart Match",
+      "subtitle": "Have a garment? Upload it and we'll generate the perfect model for you instantly.",
+      "loading": "Analyzing style & creating your model...",
+      "cta": "Drag & drop or click to upload"
+    },
+    "primaryFeatures": "Primary Features",
+    "bodyDetails": "Body Details",
+    "photographyStyle": "Photography Style",
+    "generatedModel": "Generated model",
+    "createModel": {
+      "title": "Create Model"
+    },
+    "myCollection": {
+      "title": "My Collection",
+      "subtitle": "Select a previously saved model to start a new session.",
+      "empty": "Your collection is empty. Generate and collect some models!"
+    },
+    "or": "OR"
+  },
+  "smartMatchResult": {
+    "title": "Smart Match Results",
+    "generatedModel": "Generated Model",
+    "yourGarment": "Your Garment",
+    "inferredCriteria": "Inferred Criteria",
+    "goBack": "Try Again",
+    "confirm": "Confirm & Start"
+  },
+  "modelCriteria": {
+    "nationality": "Nationality",
+    "gender": "Gender",
+    "skinTone": "Skin Tone",
+    "ageRange": "Age Range",
+    "faceShape": "Face Shape",
+    "eyeColor": "Eye Color",
+    "hairColor": "Hair Color",
+    "hairStyle": "Hair Style",
+    "expression": "Expression",
+    "shotType": "Shot Type",
+    "cameraAngle": "Camera Angle",
+    "lightingStyle": "Lighting Style",
+    "lensType": "Lens Type",
+    "heightRange": "Height",
+    "customHeight": "Custom Height (cm)",
+    "build": "Build"
+  },
+  "workspace": {
+    "title": "Virtual Try-On",
+    "sidebar": {
+        "workspace": "Workspace",
+        "myProjects": "My Projects",
+        "saveProject": "Save Project"
+    },
+    "loading": {
+        "generatingPose": "Generating Pose...",
+        "resegmenting": "Re-segmenting...",
+        "applyingGarment": "Applying Garment..."
+    },
+    "selectPose": "Select Pose",
+    "posedModel": "Model Preview",
+    "posedModelPlaceholder": "Select a pose to generate the model.",
+    "upload": {
+        "title": "Upload Your Garment",
+        "subtitle": "Drag & drop a file or browse your computer",
+        "successTitle": "Upload Successful!",
+        "successSubtitle": "Ready for try-on. Upload another to replace."
+    },
+    "segment": {
+        "original": "Original",
+        "segmented": "Segmented",
+        "originalAlt": "Uploaded garment",
+        "segmentedAlt": "Segmented garment",
+        "resegmentPrompt": "Is the segmentation incorrect? Try again:",
+        "editTitle": "Edit Segmentation",
+        "tool": "Tool",
+        "brushSize": "Brush Size"
+    },
+    "livePreview": "Live Preview",
+    "previewPlaceholder": "Your final image will appear here.",
+    "previewReady": "Ready to apply garment.",
+    "finalImageAlt": "Final try-on result",
+    "fabricType": "Fabric Type"
+  },
+  "styling": {
+    "title": "Styling",
+    "top": "Top",
+    "bottom": "Bottom",
+    "upload": "Upload",
+    "library": "Library",
+    "source": "Source",
+    "selectTop": "Select a Top",
+    "selectBottom": "Select a Bottom"
+  },
+  "stylingLibrary": {
+    "white_t-shirt": "White T-Shirt",
+    "black_tank_top": "Black Tank Top",
+    "blue_jeans": "Blue Jeans",
+    "black_trousers": "Black Trousers",
+    "denim_skirt": "Denim Skirt"
+  },
+  "errors": {
+    "generateModels": "Failed to generate models. Please try again.",
+    "generatePose": "Failed to generate pose: {{poseName}}.",
+    "virtualTryOn": "Virtual try-on failed. Please try again with a different image.",
+    "segmentGarment": "Failed to segment garment. Please try a clearer image.",
+    "resegmentGarment": "Failed to re-segment garment. Please try again.",
+    "segmentationFailed": "Segmentation Failed",
+    "refineGarment": "Failed to refine segmentation. Please try again.",
+    "changeBackground": "Failed to change background. Please try again.",
+    "rateLimitExceeded": "You've sent too many requests. Please wait a moment and try again.",
+    "smartMatchFailed": "Smart match failed. Please try again or create a model manually.",
+    "analyzeGarment": "Failed to analyze garment style. Please try again.",
+    "generationFailed": "Generation failed.",
+    "safetyBlock": "Generation failed due to safety policies. Please try adjusting your description or settings.",
+    "liveSessionPermissions": "Camera and microphone access is required for a live session.",
+    "liveSessionFailed": "Live session failed to connect. Please try again.",
+    "inpaintingFailed": "Failed to fix detail. Please try again."
+  },
+  "swapModelModal": {
+    "title": "Swap Model",
+    "selectMethod": "How would you like to swap the model?",
+    "randomSubtitle": "Generating 4 random models for you to choose from.",
+    "customSubtitle": "Define the exact criteria for the new model.",
+    "generating": "Generating...",
+    "selectOne": "Select one to apply to your image."
+  },
+  "changeBackgroundModal": {
+    "title": "Change Background",
+    "presets": "Presets",
+    "customPrompt": "Or describe your own background",
+    "customPlaceholder": "e.g., a futuristic cityscape at dusk",
+    "generating": "Generating Background..."
+  },
+  "batchProcessingModal": {
+    "title": "Batch Generation",
+    "selectModels": "1. Select Models",
+    "selectPoses": "2. Select Poses",
+    "review": "3. Review & Generate",
+    "summary": "{{modelCount}} Models × {{poseCount}} Poses = {{total}} Images",
+    "start": "Start Generation",
+    "generating": "Generating image {{current}} of {{total}}...",
+    "complete": "Generation Complete",
+    "downloadAll": "Download All",
+    "noModels": "No models in your collection to select from.",
+    "error": "Error"
+  },
+  "myProjectsModal": {
+    "title": "My Projects",
+    "empty": "You have no saved projects.",
+    "load": "Load",
+    "delete": "Delete",
+    "namePrompt": "Enter a name for your project:",
+    "defaultProjectName": "Project"
+  },
+  "liveSessionModal": {
+    "title": "Live Styling Session",
+    "description": "Start a live video chat with our AI Stylist. Show your outfit and get real-time feedback and advice.",
+    "start": "Start Session",
+    "end": "End Session",
+    "connecting": "Connecting...",
+    "active": "Session Active",
+    "you": "You",
+    "stylist": "Stylist"
+  },
+  "inpaintingModal": {
+    "title": "Fix Detail",
+    "instruction": "1. Use the brush to mask the area you want to change.",
+    "promptLabel": "2. Describe the correction:",
+    "promptPlaceholder": "e.g., Change the logo to a red circle",
+    "correcting": "Correcting..."
+  },
+  "downloadModal": {
+    "title": "Download Image",
+    "standardJPG": "Standard (JPG)",
+    "standardJPGDescription": "Good quality, smaller file size.",
+    "originalPNG": "Original (PNG)",
+    "originalPNGDescription": "Highest quality, larger file size.",
+    "aiEnhance4K": "AI Enhance (4K)",
+    "aiEnhance4KDescription": "Upscale to 4K. May take a moment.",
+    "upscaling": "Upscaling...",
+    "errorUpscaling": "AI enhancement failed. Please try again."
+  },
+  "toasts": {
+    "projectSaved": "Project saved successfully!",
+    "projectLoaded": "Project loaded.",
+    "projectDeleted": "Project deleted."
+  },
+  "backgroundPresets": {
+    "studio_white": "Studio White",
+    "outdoor_cafe": "Outdoor Cafe",
+    "city_night": "City Night",
+    "beach_sunset": "Beach Sunset",
+    "modern_loft": "Modern Loft",
+    "forest_path": "Forest Path"
+  },
+  "nationalities": {
+    "american": "American",
+    "argentinian": "Argentinian",
+    "australian": "Australian",
+    "brazilian": "Brazilian",
+    "british": "British",
+    "canadian": "Canadian",
+    "chinese": "Chinese",
+    "colombian": "Colombian",
+    "egyptian": "Egyptian",
+    "ethiopian": "Ethiopian",
+    "filipino": "Filipino",
+    "french": "French",
+    "german": "German",
+    "ghanaian": "Ghanaian",
+    "indian": "Indian",
+    "iranian": "Iranian",
+    "italian": "Italian",
+    "japanese": "Japanese",
+    "kenyan": "Kenyan",
+    "korean": "Korean",
+    "mexican": "Mexican",
+    "new_zealander": "New Zealander",
+    "nigerian": "Nigerian",
+    "polish": "Polish",
+    "russian": "Russian",
+    "saudi_arabian": "Saudi Arabian",
+    "south_african": "South African",
+    "spanish": "Spanish",
+    "swedish": "Swedish",
+    "thai": "Thai",
+    "turkish": "Turkish",
+    "ukrainian": "Ukrainian",
+    "vietnamese": "Vietnamese"
+  },
+  "genders": {
+    "female": "Female",
+    "male": "Male"
+  },
+  "skinTones": {
+    "fair": "Fair",
+    "light": "Light",
+    "medium": "Medium",
+    "olive": "Olive",
+    "tan": "Tan",
+    "dark": "Dark"
+  },
+  "ageRanges": {
+    "18-25": "18-25",
+    "26-35": "26-35",
+    "36-45": "36-45",
+    "46-55": "46-55"
+  },
+  "builds": {
+    "slim": "Slim",
+    "athletic": "Athletic",
+    "well-proportioned": "Well-proportioned",
+    "curvy": "Curvy",
+    "plus-sized": "Plus-sized",
+    "pregnant": "Pregnant"
+  },
+  "heightRanges": {
+    "petite": "Petite (<165cm)",
+    "average": "Average (165-175cm)",
+    "tall": "Tall (>175cm)",
+    "custom": "Custom"
+  },
+  "hairColors": {
+    "black": "Black",
+    "brown": "Brown",
+    "blonde": "Blonde",
+    "red": "Red",
+    "gray": "Gray",
+    "white": "White"
+  },
+  "hairStyles": {
+    "long_straight": "Long Straight",
+    "long_wavy": "Long Wavy",
+    "long_curly": "Long Curly",
+    "medium_wavy": "Medium Wavy",
+    "medium_straight": "Medium Straight",
+    "short_bob": "Short Bob",
+    "pixie_cut": "Pixie Cut",
+    "curly_afro": "Curly Afro",
+    "high_ponytail": "High Ponytail",
+    "elegant_updo": "Elegant Updo",
+    "box_braids": "Box Braids",
+    "messy_bun": "Messy Bun",
+    "wavy_lob": "Wavy Lob",
+    "bangs": "Bangs",
+    "shag_cut": "Shag Cut",
+    "cornrows": "Cornrows",
+    "dreadlocks": "Dreadlocks",
+    "top_knot": "Top Knot",
+    "french_braid": "French Braid",
+    "fishtail_braid": "Fishtail Braid",
+    "space_buns": "Space Buns",
+    "short_and_tidy": "Short and Tidy",
+    "crew_cut": "Crew Cut",
+    "slicked_back": "Slicked Back",
+    "undercut": "Undercut",
+    "fade": "Fade",
+    "man_bun": "Man Bun",
+    "curly_top": "Curly Top",
+    "quiff": "Quiff",
+    "buzz_cut": "Buzz Cut",
+    "pompadour": "Pompadour",
+    "comb_over": "Comb Over",
+    "french_crop": "French Crop",
+    "textured_crop": "Textured Crop",
+    "spiky_hair": "Spiky Hair",
+    "side_part": "Side Part",
+    "mohawk": "Mohawk"
+  },
+  "eyeColors": {
+    "brown": "Brown",
+    "blue": "Blue",
+    "green": "Green",
+    "hazel": "Hazel",
+    "gray": "Gray"
+  },
+  "faceShapes": {
+    "oval": "Oval",
+    "round": "Round",
+    "square": "Square",
+    "heart": "Heart",
+    "diamond": "Diamond"
+  },
+  "expressions": {
+    "neutral": "Neutral",
+    "smiling": "Smiling",
+    "serious": "Serious",
+    "thoughtful": "Thoughtful",
+    "confident": "Confident"
+  },
+  "shotTypes": {
+    "close-up_portrait": "Close-up Portrait",
+    "medium_shot": "Medium Shot",
+    "cowboy_shot": "Cowboy Shot",
+    "full_body_shot": "Full Body Shot"
+  },
+  "cameraAngles": {
+    "eye-level": "Eye-level",
+    "slightly_high_angle": "Slightly High Angle",
+    "slightly_low_angle": "Slightly Low Angle"
+  },
+  "lightingStyles": {
+    "soft_studio_light": "Soft Studio Light",
+    "dramatic_rim_light": "Dramatic Rim Light",
+    "cinematic_lighting": "Cinematic Lighting",
+    "golden_hour_glow": "Golden Hour Glow"
+  },
+  "lensTypes": {
+    "85mm_portrait_lens_(f_1.4)": "85mm Portrait Lens (f/1.4)",
+    "50mm_standard_lens_(f_1.8)": "50mm Standard Lens (f/1.8)",
+    "35mm_environmental_lens_(f_2.0)": "35mm Environmental Lens (f/2.0)"
+  },
+  "poses": {
+    "classic_front": "Classic Front",
+    "three_quarter_stand": "Three-Quarter Stand",
+    "contrapposto_lean": "Contrapposto Lean",
+    "hands_in_pockets": "Hands in Pockets",
+    "one_hand_on_hip": "One Hand on Hip",
+    "walking_step": "Walking Step",
+    "over_the_shoulder": "Over-the-Shoulder",
+    "crossed_arms": "Crossed Arms",
+    "wall_lean": "Wall Lean",
+    "stool_edge_sit": "Stool Edge Sit",
+    "seated_forward_lean": "Seated Forward Lean",
+    "hair_tuck": "Hair Tuck",
+    "hem_pinch": "Hem Pinch",
+    "pocket_emphasis": "Pocket Emphasis",
+    "hood_up": "Hood Up",
+    "cuff_adjust": "Cuff Adjust",
+    "bag_carry_side": "Bag Carry Side",
+    "toe_point_lift": "Toe Point Lift",
+    "twirl": "Twirl",
+    "back_view_head_turn": "Back View Head Turn",
+    "side_profile": "Side Profile",
+    "floor_sit_casual": "Floor Sit Casual",
+    "chair_backwards": "Chair Backwards",
+    "phone_in_hand": "Phone in Hand",
+    "zip_up": "Zip-Up",
+    "waist_grip": "Waist Grip",
+    "sleeve_roll": "Sleeve Roll",
+    "hat_tip": "Hat Tip",
+    "accessory_frame": "Accessory Frame",
+    "fabric_stretch": "Fabric Stretch"
+  },
+  "garmentTypes": {
+    "full_outfit": "Full Outfit",
+    "top_only": "Top Only",
+    "bottom_only": "Bottom Only"
+  },
+  "fabricTypes": {
+    "none": "None",
+    "cotton": "Cotton",
+    "silk": "Silk",
+    "denim": "Denim",
+    "leather": "Leather",
+    "wool": "Wool"
+  }
+}

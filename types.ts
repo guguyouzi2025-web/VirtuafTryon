@@ -40,19 +40,13 @@ export interface GarmentData {
   original: string;
 }
 
-export interface GarmentSlot {
-  segmented: string; // base64 image
-  original: string | null; // base64 image, null for library items
-  source: 'upload' | 'library';
-  fabric: string;
-}
-
-
 export interface WorkspaceState {
   selectedPose: Pose | null;
   posedImages: Record<string, string>;
-  top: GarmentSlot | null;
-  bottom: GarmentSlot | null;
+  garment: string | null;
+  originalGarment: string | null;
+  garmentType: GarmentType;
+  fabricType: string;
   finalImage: string | null;
 }
 
@@ -62,10 +56,4 @@ export interface SavedProject {
   thumbnail: string;
   initialModel: Model;
   workspaceState: WorkspaceState;
-}
-
-export interface TranscriptionEntry {
-  source: 'user' | 'model';
-  text: string;
-  isFinal: boolean;
 }

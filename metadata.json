@@ -1,8 +1,5 @@
 {
   "name": "Virtual Try-On Studio",
   "description": "An AI-powered virtual try-on application for e-commerce. Users can generate custom models, select poses, and apply their own garments to create realistic product images.",
-  "requestFramePermissions": [
-    "camera",
-    "microphone"
-  ]
+  "requestFramePermissions": []
 }

@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export const CheckCircleIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -51,7 +50,7 @@ export const MinusIcon: React.FC<{ className?: string }> = ({ className }) => (
 
 export const StarIcon: React.FC<{ className?: string; solid?: boolean }> = ({ className, solid }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill={solid ? "currentColor" : "none"} viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.32 1.011l-4.132 3.77a.563.563 0 0 0-.162.632l1.24 5.332a.563.563 0 0 1-.84.61l-4.736-2.92a.563.563 0 0 0-.652 0l-4.736 2.92a.563.563 0 0 1-.84-.61l1.24-5.332a.563.563 0 0 0-.162.632l-4.132-3.77a.563.563 0 0 1 .32-1.011l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.32 1.011l-4.132 3.77a.563.563 0 0 0-.162.632l1.24 5.332a.563.563 0 0 1-.84.61l-4.736-2.92a.563.563 0 0 0-.652 0l-4.736 2.92a.563.563 0 0 1-.84-.61l1.24-5.332a.563.563 0 0 0-.162-.632l-4.132-3.77a.563.563 0 0 1 .32-1.011l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
     </svg>
 );
 
@@ -113,23 +112,5 @@ export const CameraIcon: React.FC<{ className?: string }> = ({ className }) => (
 export const FolderIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.875a60.07 60.07 0 0 1 .527-1.437 2.25 2.25 0 0 1 2.063-.992h13.22a2.25 2.25 0 0 1 2.063.992c.189.37.35.753.527 1.437M2.25 12.875a60.32 60.32 0 0 0 .527 1.437 2.25 2.25 0 0 0 2.063.992h13.22a2.25 2.25 0 0 0 2.063-.992c.189-.37.35-.753.527-1.437m-18 0a2.25 2.25 0 0 0-2.25 2.25v.75a2.25 2.25 0 0 0 2.25 2.25h18a2.25 2.25 0 0 0 2.25-2.25v-.75a2.25 2.25 0 0 0-2.25-2.25m-18 0H2.25Z" />
-    </svg>
-);
-
-export const VideoCameraIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9A2.25 2.25 0 0 0 13.5 5.25h-9A2.25 2.25 0 0 0 2.25 7.5v9A2.25 2.25 0 0 0 4.5 18.75Z" />
-    </svg>
-);
-
-export const PaintBrushIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-    </svg>
-);
-
-export const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
     </svg>
 );

@@ -7,19 +7,6 @@ export const fileToBase64 = (file: File): Promise<string> => {
   });
 };
 
-export const blobToBase64 = (blob: Blob): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const base64data = reader.result;
-            // The result includes the data URL prefix, so we remove it.
-            resolve((base64data as string).split(',')[1]);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
-};
-
 export const simpleHash = (str: string): string => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {

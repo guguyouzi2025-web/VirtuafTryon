@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 
 // A custom hook to manage state with undo/redo capabilities.
-export const useHistory = <T>(initialState: T, maxHistoryLength: number = 20) => {
+export const useHistory = <T>(initialState: T) => {
   const [history, setHistory] = useState<{
     past: T[];
     present: T;
@@ -27,17 +27,13 @@ export const useHistory = <T>(initialState: T, maxHistoryLength: number = 20) =>
       if (JSON.stringify(newPresent) === JSON.stringify(currentHistory.present)) {
           return currentHistory;
       }
-      
-      const newPastWithCurrent = [...currentHistory.past, currentHistory.present];
-      const newPast = maxHistoryLength > 0 ? newPastWithCurrent.slice(-maxHistoryLength) : [];
-
       return {
-        past: newPast,
+        past: [...currentHistory.past, currentHistory.present],
         present: newPresent,
         future: [],
       };
     });
-  }, [maxHistoryLength]);
+  }, []);
   
   /**
    * Updates the present state without creating a new history entry.
@@ -73,17 +69,13 @@ export const useHistory = <T>(initialState: T, maxHistoryLength: number = 20) =>
     setHistory(currentHistory => {
       const next = currentHistory.future[0];
       const newFuture = currentHistory.future.slice(1);
-
-      const newPastWithCurrent = [...currentHistory.past, currentHistory.present];
-      const newPast = maxHistoryLength > 0 ? newPastWithCurrent.slice(-maxHistoryLength) : [];
-      
       return {
-        past: newPast,
+        past: [...currentHistory.past, currentHistory.present],
         present: next,
         future: newFuture,
       };
     });
-  }, [canRedo, maxHistoryLength]);
+  }, [canRedo]);
   
   /**
    * Resets the history to a new initial state.

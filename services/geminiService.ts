@@ -1,6 +1,7 @@
+
 import { GoogleGenAI, Modality, GenerateContentResponse, Type } from "@google/genai";
-import { getModelGenerationPrompt, getPoseGenerationPrompt, getVirtualTryOnPrompt, getGarmentSegmentationPrompt, getGarmentRefinementPrompt, getModelCriteriaFromGarmentPrompt, getSwapModelPrompt, getChangeBackgroundPrompt, getInpaintingPrompt, getUpscalePrompt } from '../prompts';
-import { ModelCriteria, GarmentType, GarmentSlot } from "../types";
+import { getModelGenerationPrompt, getPoseGenerationPrompt, getVirtualTryOnPrompt, getGarmentSegmentationPrompt, getGarmentRefinementPrompt, getModelCriteriaFromGarmentPrompt, getSwapModelPrompt, getChangeBackgroundPrompt } from '../prompts';
+import { ModelCriteria, GarmentType } from "../types";
 import { GeminiError } from "./geminiError";
 
 const IMAGE_MODEL_NAME = 'gemini-2.5-flash-image';
@@ -180,35 +181,24 @@ export const refineGarmentSegmentation = async (originalGarment: string, segment
     }
 };
 
-export const performVirtualTryOn = async (modelWithPoseImage: string, topGarment: GarmentSlot | null, bottomGarment: GarmentSlot | null): Promise<string> => {
-    if (!topGarment && !bottomGarment) {
-        throw new GeminiError("At least one garment must be provided for virtual try-on.", 'UNKNOWN');
-    }
-    
+export const performVirtualTryOn = async (modelWithPoseImage: string, segmentedGarmentImage: string, garmentType: GarmentType, fabricType: string): Promise<string> => {
     const ai = getAiClient();
+    const prompt = getVirtualTryOnPrompt(garmentType, fabricType);
     
-    const garmentConfig: { top?: { fabric: string }, bottom?: { fabric: string } } = {};
-    if (topGarment) garmentConfig.top = { fabric: topGarment.fabric };
-    if (bottomGarment) garmentConfig.bottom = { fabric: bottomGarment.fabric };
-    
-    const prompt = getVirtualTryOnPrompt(garmentConfig);
-
-    // FIX: Explicitly type the `parts` array to allow both image and text content, preventing a TypeScript error.
-    const parts: ({ inlineData: { mimeType: string; data: string; }; } | { text: string; })[] = [
-      { inlineData: { mimeType: 'image/png', data: modelWithPoseImage } },
-    ];
-    if (topGarment) {
-      parts.push({ inlineData: { mimeType: 'image/png', data: topGarment.segmented } });
-    }
-    if (bottomGarment) {
-      parts.push({ inlineData: { mimeType: 'image/png', data: bottomGarment.segmented } });
-    }
-    parts.push({ text: prompt });
+    const modelImagePart = {
+        inlineData: { mimeType: 'image/png', data: modelWithPoseImage },
+    };
+    const segmentedGarmentImagePart = {
+        inlineData: { mimeType: 'image/png', data: segmentedGarmentImage },
+    };
+    const textPart = {
+        text: prompt,
+    };
 
     try {
         const response = await ai.models.generateContent({
             model: IMAGE_MODEL_NAME,
-            contents: { parts },
+            contents: { parts: [modelImagePart, segmentedGarmentImagePart, textPart] },
             config: {
                 responseModalities: [Modality.IMAGE],
             },
@@ -228,7 +218,6 @@ export const performVirtualTryOn = async (modelWithPoseImage: string, topGarment
     }
 };
 
-
 export const swapModel = async (baseImage: string, criteria: Partial<ModelCriteria>): Promise<string> => {
     const prompt = getSwapModelPrompt(criteria);
     return generateImageFromPrompt(prompt, baseImage);
@@ -236,40 +225,5 @@ export const swapModel = async (baseImage: string, criteria: Partial<ModelCriter
 
 export const changeBackground = async (baseImage: string, backgroundPrompt: string): Promise<string> => {
     const prompt = getChangeBackgroundPrompt(backgroundPrompt);
-    return generateImageFromPrompt(prompt, baseImage);
-};
-
-export const performInpainting = async (baseImage: string, maskImage: string, correctionPrompt: string): Promise<string> => {
-    const ai = getAiClient();
-    const prompt = getInpaintingPrompt(correctionPrompt);
-
-    const textPart = { text: prompt };
-    const baseImagePart = { inlineData: { mimeType: 'image/png', data: baseImage } };
-    const maskImagePart = { inlineData: { mimeType: 'image/png', data: maskImage } };
-
-    try {
-        const response = await ai.models.generateContent({
-            model: IMAGE_MODEL_NAME,
-            contents: { parts: [textPart, baseImagePart, maskImagePart] },
-            config: {
-                responseModalities: [Modality.IMAGE],
-            },
-        });
-        return parseImageResponse(response);
-    } catch (error: any) {
-        console.error("Error performing inpainting:", error);
-        if (error instanceof GeminiError) {
-            throw error;
-        }
-        const errorMessage = (error?.message || '').toLowerCase();
-        if (errorMessage.includes('429') || errorMessage.includes('resource_exhausted')) {
-            throw new GeminiError("Rate limit exceeded.", 'RATE_LIMIT_EXCEEDED');
-        }
-        throw new GeminiError(error.message || 'An unknown API error occurred.', 'API_ERROR');
-    }
-};
-
-export const performUpscaling = async (baseImage: string): Promise<string> => {
-    const prompt = getUpscalePrompt();
     return generateImageFromPrompt(prompt, baseImage);
 };

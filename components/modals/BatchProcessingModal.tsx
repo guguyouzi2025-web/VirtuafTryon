@@ -1,10 +1,8 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '../shared/Button';
 import { useI18n } from '../../i18n/i18n';
-// FIX: Added GarmentSlot to imports to be used in constructing arguments for performVirtualTryOn.
-import { Model, Pose, GarmentType, GarmentSlot } from '../../types';
+import { Model, Pose, GarmentType } from '../../types';
 import { POSES } from '../../constants';
 import { usePoseCache } from '../../hooks/usePoseCache';
 import { generateModelPose, performVirtualTryOn } from '../../services/geminiService';
@@ -117,26 +115,8 @@ export const BatchProcessingModal: React.FC<BatchProcessingModalProps> = ({ isOp
                     setCachedPose(model, pose, posedModelImage);
                 }
 
-                // FIX: Corrected the arguments for `performVirtualTryOn`.
-                // It now correctly constructs GarmentSlot objects for the top and/or bottom garments.
-                const garmentSlot: GarmentSlot = {
-                    segmented: garmentData.segmented,
-                    original: garmentData.original,
-                    source: 'upload', // Assume 'upload' since original is present for batching source
-                    fabric: garmentData.fabricType,
-                };
-                
-                let topGarment: GarmentSlot | null = null;
-                let bottomGarment: GarmentSlot | null = null;
-
-                if (garmentData.garmentType === 'bottom only') {
-                    bottomGarment = garmentSlot;
-                } else {
-                    // Treat 'top only' and 'full outfit' as a top garment.
-                    topGarment = garmentSlot;
-                }
-
-                const finalImage = await performVirtualTryOn(posedModelImage, topGarment, bottomGarment);
+                // Step 2: Virtual Try-On
+                const finalImage = await performVirtualTryOn(posedModelImage, garmentData.segmented, garmentData.garmentType, garmentData.fabricType);
                 setResults(prev => prev.map(r => r.key === resultKey ? { ...r, status: 'success', image: finalImage } : r));
 
             } catch (err) {

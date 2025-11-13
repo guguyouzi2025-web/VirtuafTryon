@@ -6,7 +6,7 @@ import { Spinner } from '../shared/Spinner';
 import { swapModel } from '../../services/geminiService';
 import { useI18n } from '../../i18n/i18n';
 import { ModelCriteria } from '../../types';
-import { NATIONALITIES, SKIN_TONES, AGE_RANGES, BUILDS, HAIR_COLORS, MALE_HAIR_STYLES, FEMALE_HAIR_STYLES, EYE_COLORS, FACE_SHAPES, EXPRESSIONS } from '../../constants';
+import { NATIONALITIES, SKIN_TONES, AGE_RANGES, BUILDS, HAIR_COLORS, HAIR_STYLES, EYE_COLORS, FACE_SHAPES, EXPRESSIONS } from '../../constants';
 
 interface SwapModelModalProps {
   finalImage: string | null;
@@ -31,7 +31,6 @@ export const SwapModelModal: React.FC<SwapModelModalProps> = ({ finalImage, mode
 
     const generateRandomCriteria = (gender: 'Female' | 'Male'): Partial<ModelCriteria> => {
         const getRandom = (arr: any[]) => arr[Math.floor(Math.random() * arr.length)];
-        const hairStyles = gender === 'Male' ? MALE_HAIR_STYLES : FEMALE_HAIR_STYLES;
         return {
             nationality: getRandom(NATIONALITIES),
             gender,
@@ -39,7 +38,7 @@ export const SwapModelModal: React.FC<SwapModelModalProps> = ({ finalImage, mode
             ageRange: getRandom(AGE_RANGES),
             build: getRandom(BUILDS.filter(b => b !== 'Pregnant')),
             hairColor: getRandom(HAIR_COLORS),
-            hairStyle: getRandom(hairStyles),
+            hairStyle: getRandom(HAIR_STYLES),
             eyeColor: getRandom(EYE_COLORS),
             faceShape: getRandom(FACE_SHAPES),
             expression: getRandom(EXPRESSIONS),
@@ -107,9 +106,6 @@ export const SwapModelModal: React.FC<SwapModelModalProps> = ({ finalImage, mode
 
     if (!isOpen) return null;
 
-    const genderForCustomForm = getGenderFromDescription(modelDescription);
-    const hairStyleOptions = genderForCustomForm === 'Male' ? MALE_HAIR_STYLES : FEMALE_HAIR_STYLES;
-
     return (
         <div role="dialog" aria-modal="true" className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={handleClose}>
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
@@ -149,7 +145,7 @@ export const SwapModelModal: React.FC<SwapModelModalProps> = ({ finalImage, mode
                             <Select label={t('modelCriteria.skinTone')} options={createTranslatedOptions(SKIN_TONES, 'skinTones')} value={customSwapCriteria.skinTone || ''} onChange={(e) => setCustomSwapCriteria(c => ({...c, skinTone: e.target.value}))} />
                             <Select label={t('modelCriteria.ageRange')} options={createTranslatedOptions(AGE_RANGES, 'ageRanges')} value={customSwapCriteria.ageRange || ''} onChange={(e) => setCustomSwapCriteria(c => ({...c, ageRange: e.target.value}))} />
                             <Select label={t('modelCriteria.hairColor')} options={createTranslatedOptions(HAIR_COLORS, 'hairColors')} value={customSwapCriteria.hairColor || ''} onChange={(e) => setCustomSwapCriteria(c => ({...c, hairColor: e.target.value}))} />
-                            <Select label={t('modelCriteria.hairStyle')} options={createTranslatedOptions(hairStyleOptions, 'hairStyles')} value={customSwapCriteria.hairStyle || ''} onChange={(e) => setCustomSwapCriteria(c => ({...c, hairStyle: e.target.value}))} />
+                            <Select label={t('modelCriteria.hairStyle')} options={createTranslatedOptions(HAIR_STYLES, 'hairStyles')} value={customSwapCriteria.hairStyle || ''} onChange={(e) => setCustomSwapCriteria(c => ({...c, hairStyle: e.target.value}))} />
                              <Select label={t('modelCriteria.eyeColor')} options={createTranslatedOptions(EYE_COLORS, 'eyeColors')} value={customSwapCriteria.eyeColor || ''} onChange={(e) => setCustomSwapCriteria(c => ({...c, eyeColor: e.target.value}))} />
                             <Select label={t('modelCriteria.faceShape')} options={createTranslatedOptions(FACE_SHAPES, 'faceShapes')} value={customSwapCriteria.faceShape || ''} onChange={(e) => setCustomSwapCriteria(c => ({...c, faceShape: e.target.value}))} />
                             <Select label={t('modelCriteria.build')} options={createTranslatedOptions(BUILDS, 'builds')} value={customSwapCriteria.build || ''} onChange={(e) => setCustomSwapCriteria(c => ({...c, build: e.target.value}))} />

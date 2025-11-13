@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { ModelCriteria, Model, GarmentData } from '../types';
 import { NATIONALITY_DEFAULTS_MAP } from '../constants';
@@ -199,24 +198,22 @@ const ModelCreation: React.FC<ModelCreationProps> = ({ onModelCreated }) => {
   };
 
   const HowItWorksStep: React.FC<{ icon: React.ReactNode; title: string; description: string }> = ({ icon, title, description }) => (
-    <div className="flex-1 flex items-start gap-4">
-      <div className="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-blue-100 text-blue-600">
+    <div className="flex flex-col items-center text-center">
+      <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 text-blue-600 mb-4">
         {icon}
       </div>
-      <div>
-        <h3 className="font-bold text-zinc-900 mb-1">{title}</h3>
-        <p className="text-zinc-500 text-sm">{description}</p>
-      </div>
+      <h3 className="font-bold text-lg mb-2">{title}</h3>
+      <p className="text-gray-500">{description}</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-zinc-100 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
       <Toast message={error || ''} onDismiss={() => setError(null)} />
-      <header className="p-4 flex justify-between items-center sticky top-0 bg-zinc-100/80 backdrop-blur-sm z-10">
+      <header className="p-4 flex justify-between items-center">
         <div className="flex items-center space-x-2">
             <DrapeLogo className="h-8 w-8" />
-            <span className="text-xl font-bold text-zinc-800">VirtualTryOn</span>
+            <span className="text-xl font-bold text-gray-800">VirtualTryOn</span>
         </div>
         <div className="flex items-center space-x-4">
             <Button variant="secondary" onClick={() => setIsCollectionModalOpen(true)} className="!py-2 !px-4 rounded-full inline-flex items-center gap-2">
@@ -227,95 +224,83 @@ const ModelCreation: React.FC<ModelCreationProps> = ({ onModelCreated }) => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <main className="container mx-auto px-4 py-12 md:py-16">
+        <div className="text-center mb-16 md:mb-24">
+            <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4 leading-tight">{t('modelCreation.mainTitle')}</h1>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">{t('modelCreation.mainSubtitle')}</p>
+        </div>
 
-            <div className="bento-box lg:col-span-3 p-8 bg-white/50 rounded-3xl border border-zinc-200/80 shadow-sm flex flex-col justify-center" style={{ animationDelay: '100ms' }}>
-                <h1 className="text-4xl md:text-5xl font-extrabold text-zinc-900 mb-3 leading-tight">{t('modelCreation.mainTitle')}</h1>
-                <p className="text-base text-zinc-600 max-w-2xl">{t('modelCreation.mainSubtitle')}</p>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 items-start">
+          {/* Left Column: Create Model */}
+          <div className="space-y-8">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold mb-2">{t('modelCreation.create.title')}</h2>
+              <p className="text-gray-500">{t('modelCreation.create.subtitle')}</p>
             </div>
-
-            <div className="bento-box lg:col-span-2 p-6 bg-white/50 rounded-3xl border border-zinc-200/80 shadow-sm" style={{ animationDelay: '200ms' }}>
-                 <h2 className="text-xl font-bold mb-3">{t('modelCreation.myCollection.title')}</h2>
-                 {collection.length > 0 ? (
-                    <div className="flex items-center gap-3">
-                       {collection.slice(0, 3).map((model, i) => (
-                          <img key={i} src={`data:image/png;base64,${model.image}`} className={`w-1/3 aspect-[3/4] object-cover rounded-xl border-2 ${i > 0 ? '-ml-8' : ''} border-white shadow-md`} />
-                       ))}
-                        <Button variant="secondary" onClick={() => setIsCollectionModalOpen(true)} className="!rounded-full !px-4 !py-2 ml-auto shrink-0">View All</Button>
-                    </div>
-                 ) : (
-                    <p className="text-zinc-500 text-sm">{t('modelCreation.myCollection.empty')}</p>
-                 )}
+            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+              <CreationForm criteria={criteria} onCriteriaChange={handleCriteriaChange} />
+              <Button onClick={handleGenerate} disabled={isLoading || !isFormValid} className="w-full md:w-auto mt-8 px-12 py-3 text-lg">
+                {isLoading ? t('buttons.generating') : t('buttons.generate')}
+              </Button>
             </div>
-
-            <div className="bento-box lg:col-span-2 p-8 bg-white/50 rounded-3xl border border-zinc-200/80 shadow-sm" style={{ animationDelay: '300ms' }}>
-                 <h2 className="text-2xl font-bold mb-2">{t('modelCreation.smartMatch.mainTitle')}</h2>
-                {smartMatchResult ? (
-                    <SmartMatchResult
-                        result={smartMatchResult}
-                        onConfirm={() => onModelCreated(smartMatchResult.model, smartMatchResult.garmentData)}
-                        onGoBack={() => setSmartMatchResult(null)}
-                    />
-                ) : (
-                    <SmartMatch onFileSelect={handleSmartMatchFile} isProcessing={isSmartMatching} />
-                )}
-            </div>
-
-            <div className="bento-box lg:col-span-3 row-span-2 p-8 bg-white/50 rounded-3xl border border-zinc-200/80 shadow-sm" style={{ animationDelay: '400ms' }}>
-                 <h2 className="text-2xl font-bold mb-4">{t('modelCreation.create.title')}</h2>
-                <CreationForm criteria={criteria} onCriteriaChange={handleCriteriaChange} />
-                <Button onClick={handleGenerate} disabled={isLoading || !isFormValid} className="w-full md:w-auto mt-8 px-12 py-3 text-lg">
-                    {isLoading ? t('buttons.generating') : t('buttons.generate')}
-                </Button>
-            </div>
-
             {showResults && (
-                 <div className="bento-box lg:col-span-2 p-6 bg-white/50 rounded-3xl border border-zinc-200/80 shadow-sm" style={{ animationDelay: '500ms' }}>
-                    <ResultsGrid 
-                        generatedModels={generatedModels}
-                        selectedModel={selectedModel}
-                        isModelInCollection={isModelInCollection}
-                        onSelectModel={setSelectedModel}
-                        onToggleCollect={handleToggleCollect}
-                    />
-                </div>
+              <ResultsGrid 
+                generatedModels={generatedModels}
+                selectedModel={selectedModel}
+                isModelInCollection={isModelInCollection}
+                onSelectModel={setSelectedModel}
+                onToggleCollect={handleToggleCollect}
+              />
             )}
-            
-            <div className="bento-box lg:col-span-5 p-8 bg-white/50 rounded-3xl border border-zinc-200/80 shadow-sm" style={{ animationDelay: '600ms' }}>
-                 <h2 className="text-2xl font-bold mb-6 text-center">{t('modelCreation.howItWorks.title')}</h2>
-                 <div className="flex flex-col md:flex-row justify-between gap-8">
-                     <HowItWorksStep 
-                        icon={<UserPlusIcon className="w-6 h-6"/>}
-                        title={t('modelCreation.howItWorks.step1.title')}
-                        description={t('modelCreation.howItWorks.step1.description')}
-                    />
-                    <HowItWorksStep 
-                        icon={<SparklesIcon className="w-6 h-6"/>}
-                        title={t('modelCreation.howItWorks.step2.title')}
-                        description={t('modelCreation.howItWorks.step2.description')}
-                    />
-                    <HowItWorksStep 
-                        icon={<CameraIcon className="w-6 h-6"/>}
-                        title={t('modelCreation.howItWorks.step3.title')}
-                        description={t('modelCreation.howItWorks.step3.description')}
-                    />
-                 </div>
+          </div>
+          
+          {/* Right Column: Smart Match */}
+          <div className="space-y-8">
+            <div className="text-center">
+                <h2 className="text-3xl font-bold mb-2">{t('modelCreation.smartMatch.mainTitle')}</h2>
+                <p className="text-gray-500">{t('modelCreation.smartMatch.mainSubtitle')}</p>
             </div>
+            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+              {smartMatchResult ? (
+                <SmartMatchResult
+                  result={smartMatchResult}
+                  onConfirm={() => onModelCreated(smartMatchResult.model, smartMatchResult.garmentData)}
+                  onGoBack={() => setSmartMatchResult(null)}
+                />
+              ) : (
+                <SmartMatch onFileSelect={handleSmartMatchFile} isProcessing={isSmartMatching} />
+              )}
+            </div>
+          </div>
         </div>
+        
+        {selectedModel && !smartMatchResult && (
+          <div className="mt-12 flex justify-center">
+              <Button onClick={handleNext} className="text-lg px-12 py-3">{t('buttons.next')}</Button>
+          </div>
+        )}
+        
+        <section className="text-center mt-24 md:mt-32">
+            <h2 className="text-3xl font-bold mb-10">{t('modelCreation.howItWorks.title')}</h2>
+            <div className="grid md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+                <HowItWorksStep 
+                  icon={<UserPlusIcon className="w-8 h-8"/>}
+                  title={t('modelCreation.howItWorks.step1.title')}
+                  description={t('modelCreation.howItWorks.step1.description')}
+                />
+                 <HowItWorksStep 
+                  icon={<SparklesIcon className="w-8 h-8"/>}
+                  title={t('modelCreation.howItWorks.step2.title')}
+                  description={t('modelCreation.howItWorks.step2.description')}
+                />
+                 <HowItWorksStep 
+                  icon={<CameraIcon className="w-8 h-8"/>}
+                  title={t('modelCreation.howItWorks.step3.title')}
+                  description={t('modelCreation.howItWorks.step3.description')}
+                />
+            </div>
+        </section>
       </main>
-
-      {selectedModel && !smartMatchResult && (
-        <div className="fixed bottom-0 left-0 right-0 z-20 p-4 bg-white/80 backdrop-blur-sm border-t border-zinc-200 animate-fadeInBottom">
-            <div className="container mx-auto flex items-center justify-end gap-4">
-                <div className="flex items-center gap-3">
-                    <img src={`data:image/png;base64,${selectedModel.image}`} alt="Selected model" className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-md"/>
-                    <span className="font-semibold text-zinc-700">Model Selected</span>
-                </div>
-                <Button onClick={handleNext} className="text-base px-8 py-2.5">{t('buttons.next')}</Button>
-            </div>
-        </div>
-      )}
 
       <CollectionModal
         isOpen={isCollectionModalOpen}

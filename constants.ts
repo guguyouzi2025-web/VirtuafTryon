@@ -1,4 +1,3 @@
-
 import { Pose } from './types';
 import { POSE_ICONS } from './poseIcons';
 
@@ -40,7 +39,7 @@ export const NATIONALITY_DEFAULTS_MAP: Record<string, NationalityDefaults> = {
     // Europe
     "British": { skinTone: "Fair", faceShape: "Oval", eyeColor: "Blue", hairColor: "Brown", hairStyle: "Medium Wavy" },
     "French": { skinTone: "Fair", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", hairStyle: "Medium Wavy" },
-    "German": { skinTone: "Fair", faceShape: "Square", eyeColor: "Blue", hairColor: "Blonde", hairStyle: "Short Bob" },
+    "German": { skinTone: "Fair", faceShape: "Square", eyeColor: "Blue", hairColor: "Blonde", hairStyle: "Short Pixie Cut" },
     "Italian": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", hairStyle: "Medium Wavy" },
     "Spanish": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", hairStyle: "Long Straight" },
     "Russian": { skinTone: "Fair", faceShape: "Round", eyeColor: "Blue", hairColor: "Blonde", hairStyle: "Long Straight" },
@@ -74,51 +73,7 @@ export const BUILDS: string[] = ["Slim", "Athletic", "Well-proportioned", "Curvy
 export const HEIGHT_RANGES: string[] = ["Petite", "Average", "Tall", "Custom"];
 
 export const HAIR_COLORS: string[] = ["Black", "Brown", "Blonde", "Red", "Gray", "White"];
-
-export const FEMALE_HAIR_STYLES: string[] = [
-    "Long Straight",
-    "Long Wavy",
-    "Long Curly",
-    "Medium Wavy",
-    "Medium Straight",
-    "Short Bob",
-    "Pixie Cut",
-    "Curly Afro",
-    "High Ponytail",
-    "Elegant Updo",
-    "Box Braids",
-    "Messy Bun",
-    "Wavy Lob",
-    "Bangs",
-    "Shag Cut",
-    "Cornrows",
-    "Dreadlocks",
-    "Top Knot",
-    "French Braid",
-    "Fishtail Braid",
-    "Space Buns"
-];
-export const MALE_HAIR_STYLES: string[] = [
-    "Short and Tidy",
-    "Crew Cut",
-    "Slicked Back",
-    "Undercut",
-    "Fade",
-    "Medium Wavy",
-    "Long Straight",
-    "Man Bun",
-    "Curly Top",
-    "Quiff",
-    "Buzz Cut",
-    "Pompadour",
-    "Comb Over",
-    "French Crop",
-    "Textured Crop",
-    "Spiky Hair",
-    "Side Part",
-    "Mohawk"
-];
-
+export const HAIR_STYLES: string[] = ["Short Pixie Cut", "Medium Wavy", "Long Straight", "Curly Afro", "Slicked Back"];
 export const EYE_COLORS: string[] = ["Brown", "Blue", "Green", "Hazel", "Gray"];
 export const FACE_SHAPES: string[] = ["Oval", "Round", "Square", "Heart", "Diamond"];
 
@@ -177,15 +132,3 @@ export const POSES: Pose[] = poseDefinitions.map(pose => ({
   ...pose,
   imageUrl: POSE_ICONS[pose.name],
 }));
-
-export const STYLING_LIBRARY = {
-  tops: [
-    { name: "white_t-shirt", thumbnail: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAKlJREFUeJzt0UENwCAQBEF/s4iTo9hBEf2Wl5Acz3sVszMAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIC/AQ8yOAEsDXw/AAAAABJRU5ErkJggg==", image: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAKlJREFUeJzt0UENwCAQBEF/s4iTo9hBEf2Wl5Acz3sVszMAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIC/AQ8yOAEsDXw/AAAAABJRU5ErkJggg==" },
-    { name: "black_tank_top", thumbnail: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAClJREFUeJzt0AEJAAAEAMC/tD+HYfAAurlzByBAgAABAgQIECBAgAABAgQI/Bq4AQZBAAE+870YAAAAAElFTkSuQmCC", image: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAClJREFUeJzt0AEJAAAEAMC/tD+HYfAAurlzByBAgAABAgQIECBAgAABAgQI/Bq4AQZBAAE+870YAAAAAElFTkSuQmCC" },
-  ],
-  bottoms: [
-    { name: "blue_jeans", thumbnail: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAKxJREFUeJzt0EEOACAQBEF/s4iTo5hBEf2Wl5AcD3sVsxMAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIC/AQ8yOAEsK4e8XgAAAABJRU5ErkJggg==", image: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAKxJREFUeJzt0EEOACAQBEF/s4iTo5hBEf2Wl5AcD3sVsxMAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIC/AQ8yOAEsK4e8XgAAAABJRU5ErkJggg==" },
-    { name: "black_trousers", thumbnail: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAClJREFUeJzt0AEJAAAEAMC/tD+HYfAAurlzByBAgAABAgQIECBAgAABAgQI/Bq4AQZBAAE+870YAAAAAElFTkSuQmCC", image: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAClJREFUeJzt0AEJAAAEAMC/tD+HYfAAurlzByBAgAABAgQIECBAgAABAgQI/Bq4AQZBAAE+870YAAAAAElFTkSuQmCC" },
-    { name: "denim_skirt", thumbnail: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAKtJREFUeJzt0UENACAQBEF/s4iTo9hBEf2Wl5AcL3sVszMAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIA/AQ4yOAEsSl1eDwAAAABJRU5ErkJggg==", image: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAKtJREFUeJzt0UENACAQBEF/s4iTo9hBEf2Wl5AcL3sVszMAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIA/AQ4yOAEsSl1eDwAAAABJRU5ErkJggg==" },
-  ]
-};

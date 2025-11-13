@@ -2,17 +2,15 @@ import React from 'react';
 import { Pose } from '../../types';
 import { useI18n } from '../../i18n/i18n';
 import { Spinner } from '../shared/Spinner';
-import { RedoIcon } from '../icons';
 
 interface PoseSelectorProps {
     poses: Pose[];
     selectedPose: Pose | null;
     loadingPoses: Set<string>;
     onPoseSelect: (pose: Pose) => void;
-    onRegeneratePose: (pose: Pose) => void;
 }
 
-export const PoseSelector: React.FC<PoseSelectorProps> = ({ poses, selectedPose, loadingPoses, onPoseSelect, onRegeneratePose }) => {
+export const PoseSelector: React.FC<PoseSelectorProps> = ({ poses, selectedPose, loadingPoses, onPoseSelect }) => {
     const { t } = useI18n();
 
     return (
@@ -28,18 +26,6 @@ export const PoseSelector: React.FC<PoseSelectorProps> = ({ poses, selectedPose,
                             onClick={() => onPoseSelect(pose)} 
                             className={`relative flex flex-col items-center p-1 rounded-lg cursor-pointer transition-all ${isSelected ? 'bg-blue-100 ring-2 ring-blue-500' : 'hover:bg-gray-100'} ${isLoading ? 'cursor-not-allowed' : ''}`}
                         >
-                            {isSelected && !isLoading && (
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onRegeneratePose(pose);
-                                    }}
-                                    className="absolute top-1 right-1 p-1 rounded-full bg-black/40 text-white hover:bg-black/60 transition-opacity z-10"
-                                    aria-label="Regenerate pose variation"
-                                >
-                                    <RedoIcon className="w-4 h-4" />
-                                </button>
-                            )}
                             <div className="aspect-square w-full rounded-md overflow-hidden ring-1 ring-gray-200">
                                 <img src={pose.imageUrl} alt={t(`poses.${pose.name}`)} className={`w-full h-full object-cover transition-opacity ${isLoading ? 'opacity-50' : ''}`}/>
                             </div>

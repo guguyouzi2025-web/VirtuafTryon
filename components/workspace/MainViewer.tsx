@@ -1,8 +1,6 @@
 import React from 'react';
 import { Spinner } from '../shared/Spinner';
 import { useI18n } from '../../i18n/i18n';
-import { PaintBrushIcon } from '../icons';
-import { Button } from '../shared/Button';
 
 interface MainViewerProps {
     posedOrInitialImage: string | null;
@@ -10,10 +8,9 @@ interface MainViewerProps {
     isCurrentPoseLoading: boolean;
     isLoadingTryOn: boolean;
     isGarmentReady: boolean;
-    onFixDetail: () => void;
 }
 
-export const MainViewer: React.FC<MainViewerProps> = ({ posedOrInitialImage, finalImage, isCurrentPoseLoading, isLoadingTryOn, isGarmentReady, onFixDetail }) => {
+export const MainViewer: React.FC<MainViewerProps> = ({ posedOrInitialImage, finalImage, isCurrentPoseLoading, isLoadingTryOn, isGarmentReady }) => {
     const { t } = useI18n();
 
     return (
@@ -42,24 +39,14 @@ export const MainViewer: React.FC<MainViewerProps> = ({ posedOrInitialImage, fin
             <div className="space-y-4">
                 <h3 className="font-bold text-lg text-center">{t('workspace.livePreview')}</h3>
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                    <div className="w-full aspect-[3/4] rounded-lg bg-gray-200 flex flex-col items-center justify-center overflow-hidden text-center p-4 relative group">
+                    <div className="w-full aspect-[3/4] rounded-lg bg-gray-200 flex flex-col items-center justify-center overflow-hidden text-center p-4 relative">
                         {isLoadingTryOn && (
                             <div className="absolute inset-0 bg-gray-200/80 flex flex-col items-center justify-center z-10">
                                 <Spinner/>
                                 <p className="mt-2 text-sm font-semibold text-gray-600">{t('workspace.loading.applyingGarment')}</p>
                             </div>
                         )}
-                        {!isLoadingTryOn && finalImage && (
-                             <>
-                                <img src={`data:image/png;base64,${finalImage}`} alt={t('workspace.finalImageAlt')} className="w-full h-full object-contain"/>
-                                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <Button size="sm" variant="secondary" onClick={onFixDetail} className="!pl-2 !pr-3 inline-flex items-center gap-1.5">
-                                        <PaintBrushIcon className="w-4 h-4" />
-                                        {t('buttons.fixDetail')}
-                                    </Button>
-                                </div>
-                            </>
-                        )}
+                        {!isLoadingTryOn && finalImage && <img src={`data:image/png;base64,${finalImage}`} alt={t('workspace.finalImageAlt')} className="w-full h-full object-contain"/>}
                         {!isLoadingTryOn && !finalImage && !isGarmentReady && <p className="text-gray-500">{t('workspace.previewPlaceholder')}</p>}
                         {!isLoadingTryOn && !finalImage && isGarmentReady && !isCurrentPoseLoading && posedOrInitialImage && <p className="text-gray-500">{t('workspace.previewReady')}</p>}
                         {!isLoadingTryOn && !finalImage && isGarmentReady && (!posedOrInitialImage || isCurrentPoseLoading) && <p className="text-gray-500">{t('workspace.posedModelPlaceholder')}</p>}

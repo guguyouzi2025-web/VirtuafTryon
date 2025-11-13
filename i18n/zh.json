@@ -19,7 +19,7 @@
     "refineAI": "AI 优化",
     "refineManual": "编辑",
     "refining": "优化中...",
-    "applyGarment": "应用",
+    "applyGarment": "应用服装",
     "applying": "应用中...",
     "saveChanges": "保存更改",
     "cancel": "取消",
@@ -31,9 +31,7 @@
     "random": "随机",
     "custom": "自定义",
     "close": "关闭",
-    "myCollection": "我的收藏",
-    "liveSession": "实时会话",
-    "fixDetail": "修复细节"
+    "myCollection": "我的收藏"
   },
   "modelCreation": {
     "title": "创建您的虚拟模特",
@@ -144,23 +142,6 @@
     "finalImageAlt": "最终试穿效果",
     "fabricType": "面料类型"
   },
-  "styling": {
-    "title": "造型面板",
-    "top": "上装",
-    "bottom": "下装",
-    "upload": "上传",
-    "library": "素材库",
-    "source": "来源",
-    "selectTop": "选择上装",
-    "selectBottom": "选择下装"
-  },
-  "stylingLibrary": {
-    "white_t-shirt": "白色T恤",
-    "black_tank_top": "黑色背心",
-    "blue_jeans": "蓝色牛仔裤",
-    "black_trousers": "黑色长裤",
-    "denim_skirt": "牛仔裙"
-  },
   "errors": {
     "generateModels": "生成模特失败。请重试。",
     "generatePose": "生成姿势“{{poseName}}”失败。",
@@ -174,10 +155,7 @@
     "smartMatchFailed": "智能匹配失败。请重试或手动创建模特。",
     "analyzeGarment": "分析服装风格失败，请重试。",
     "generationFailed": "生成失败。",
-    "safetyBlock": "生成失败，请尝试调整您的描述或设置。",
-    "liveSessionPermissions": "实时会话需要相机和麦克风权限。",
-    "liveSessionFailed": "实时会话连接失败。请重试。",
-    "inpaintingFailed": "修复细节失败。请重试。"
+    "safetyBlock": "生成失败，请尝试调整您的描述或设置。"
   },
   "swapModelModal": {
     "title": "更换模特",
@@ -215,34 +193,6 @@
     "namePrompt": "为您的项目输入一个名称：",
     "defaultProjectName": "项目"
   },
-  "liveSessionModal": {
-    "title": "实时造型会话",
-    "description": "与我们的AI造型师开始实时视频聊天。展示您的服装，获取实时反馈和建议。",
-    "start": "开始会话",
-    "end": "结束会话",
-    "connecting": "连接中...",
-    "active": "会话进行中",
-    "you": "您",
-    "stylist": "造型师"
-  },
-  "inpaintingModal": {
-    "title": "修复细节",
-    "instruction": "1. 使用画笔遮盖您想更改的区域。",
-    "promptLabel": "2. 描述您想如何修正：",
-    "promptPlaceholder": "例如，将标志更改为红色圆形",
-    "correcting": "修正中..."
-  },
-  "downloadModal": {
-    "title": "下载图片",
-    "standardJPG": "标准 (JPG)",
-    "standardJPGDescription": "画质良好，文件较小。",
-    "originalPNG": "原始 (PNG)",
-    "originalPNGDescription": "最高画质，文件较大。",
-    "aiEnhance4K": "AI 增强 (4K)",
-    "aiEnhance4KDescription": "使用 AI 提升至 4K 分辨率，请稍候。",
-    "upscaling": "正在增强...",
-    "errorUpscaling": "AI 增强失败，请重试。"
-  },
   "toasts": {
     "projectSaved": "项目已成功保存！",
     "projectLoaded": "项目已加载。",
@@ -266,7 +216,7 @@
     "chinese": "中国",
     "colombian": "哥伦比亚",
     "egyptian": "埃及",
-    "ethiopian": "埃塞오피아",
+    "ethiopian": "埃塞俄比亚",
     "filipino": "菲律宾",
     "french": "法国",
     "german": "德国",
@@ -332,43 +282,11 @@
     "white": "白色"
   },
   "hairStyles": {
-    "long_straight": "长直发",
-    "long_wavy": "长波浪",
-    "long_curly": "长卷发",
+    "short_pixie_cut": "精灵短发",
     "medium_wavy": "中长波浪",
-    "medium_straight": "中长直发",
-    "short_bob": "波波头",
-    "pixie_cut": "精灵短发",
-    "curly_afro": "爆炸头",
-    "high_ponytail": "高马尾",
-    "elegant_updo": "优雅盘发",
-    "box_braids": "盒式辫",
-    "messy_bun": "凌乱丸子头",
-    "wavy_lob": "波浪长波波头",
-    "bangs": "刘海",
-    "shag_cut": "层次剪",
-    "cornrows": "垄沟辫",
-    "dreadlocks": "脏辫",
-    "top_knot": "顶髻",
-    "french_braid": "法式辫",
-    "fishtail_braid": "鱼尾辫",
-    "space_buns": "太空丸子头",
-    "short_and_tidy": "短发整洁",
-    "crew_cut": "平头",
-    "slicked_back": "后梳",
-    "undercut": "底切",
-    "fade": "渐变",
-    "man_bun": "男士丸子头",
-    "curly_top": "卷顶",
-    "quiff": "飞机头",
-    "buzz_cut": "寸头",
-    "pompadour": "庞毕度发型",
-    "comb_over": "梳理",
-    "french_crop": "法式短发",
-    "textured_crop": "纹理短发",
-    "spiky_hair": "刺猬头",
-    "side_part": "侧分",
-    "mohawk": "莫霍克发型"
+    "long_straight": "长直发",
+    "curly_afro": "爆炸卷发",
+    "slicked_back": "后梳"
   },
   "eyeColors": {
     "brown": "棕色",

@@ -22,7 +22,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-100 text-zinc-800">
+    <div className="min-h-screen bg-gray-50 text-gray-800">
       {step === AppStep.MODEL_CREATION && <ModelCreation onModelCreated={handleModelCreated} />}
       {step === AppStep.WORKSPACE && selectedModel && <Workspace initialModel={selectedModel} initialGarmentData={initialGarmentData} onGoBack={handleGoBack}/>}
     </div>

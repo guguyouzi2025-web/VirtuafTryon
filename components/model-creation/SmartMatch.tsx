@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from '../shared/Button';
 import { Spinner } from '../shared/Spinner';
@@ -50,13 +49,13 @@ export const SmartMatch: React.FC<SmartMatchProps> = ({ onFileSelect, isProcessi
   };
 
   return (
-    <div className="text-center">
-      <p className="text-zinc-500 text-center mb-6 max-w-2xl mx-auto">{t('modelCreation.smartMatch.subtitle')}</p>
+    <div className="text-center animate-fadeInRight">
+      <p className="text-gray-500 text-center mb-6 max-w-2xl mx-auto">{t('modelCreation.smartMatch.subtitle')}</p>
       <div 
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`w-full rounded-2xl border border-zinc-200 p-8 text-center transition-colors duration-300 ${isDraggingOver ? 'border-blue-500 bg-blue-50' : 'bg-zinc-100/80'}`}
+          className={`max-w-xl mx-auto rounded-2xl border-2 border-dashed p-8 text-center transition-colors duration-300 ${isDraggingOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white'}`}
       >
           <input type="file" accept="image/png, image/jpeg" ref={fileInputRef} onChange={handleFileChange} className="hidden" disabled={isProcessing} />
           {isProcessing ? (
@@ -66,8 +65,8 @@ export const SmartMatch: React.FC<SmartMatchProps> = ({ onFileSelect, isProcessi
               </div>
           ) : (
               <>
-                  <UploadIcon className="h-12 w-12 mx-auto text-zinc-400 mb-4" />
-                  <p className="text-zinc-600 font-semibold mb-4">{t('modelCreation.smartMatch.cta')}</p>
+                  <UploadIcon className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                  <p className="text-gray-600 font-semibold mb-4">{t('modelCreation.smartMatch.cta')}</p>
                   <Button variant="secondary" onClick={handleBrowseClick}>
                       {t('buttons.browse')}
                   </Button>

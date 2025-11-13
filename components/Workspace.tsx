@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
-import { Model, Pose, GarmentSlot, GarmentData, SavedProject, WorkspaceState as IWorkspaceState } from '../types';
+import { Model, Pose, GarmentType, GarmentData, SavedProject, WorkspaceState as IWorkspaceState } from '../types';
 import { POSES } from '../constants';
-import { generateModelPose, performVirtualTryOn, segmentGarment, performInpainting } from '../services/geminiService';
+import { generateModelPose, performVirtualTryOn, segmentGarment, refineGarmentSegmentation } from '../services/geminiService';
 import { Button } from './shared/Button';
 import { DrapeLogo, MenuIcon, XIcon } from './icons';
 import { useI18n } from '../i18n/i18n';
@@ -19,10 +20,6 @@ import { PoseSelector } from './workspace/PoseSelector';
 import { MainViewer } from './workspace/MainViewer';
 import { GarmentControls } from './workspace/GarmentControls';
 import { BatchProcessingModal } from './modals/BatchProcessingModal';
-import { LiveSessionModal } from './modals/LiveSessionModal';
-import { StylingLibraryModal, LibraryItem } from './modals/StylingLibraryModal';
-import { InpaintingModal } from './modals/InpaintingModal';
-import { DownloadModal } from './modals/DownloadModal';
 
 interface WorkspaceProps {
   initialModel: Model;
@@ -30,61 +27,30 @@ interface WorkspaceProps {
   onGoBack: () => void;
 }
 
-const SESSION_KEY = 'virtualTryOnWorkspaceSession';
-
 const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData, onGoBack }) => {
   const { t } = useI18n();
   const { getCachedPose, setCachedPose } = usePoseCache();
-
-  const getInitialState = useCallback((): IWorkspaceState => {
-      try {
-          const savedSession = sessionStorage.getItem(SESSION_KEY);
-          if (savedSession) {
-              const { workspaceState } = JSON.parse(savedSession);
-              return workspaceState;
-          }
-      } catch (e) {
-          console.error("Failed to load workspace session state", e);
-      }
-      
-      const initialTop: GarmentSlot | null = initialGarmentData ? {
-          segmented: initialGarmentData.segmented,
-          original: initialGarmentData.original,
-          source: 'upload',
-          fabric: 'None',
-      } : null;
-
-      return {
-          selectedPose: null,
-          posedImages: {},
-          top: initialTop,
-          bottom: null,
-          finalImage: null,
-      };
-  }, [initialGarmentData]);
-
-  const getInitialModel = useCallback((): Model => {
-      try {
-          const savedSession = sessionStorage.getItem(SESSION_KEY);
-          if (savedSession) {
-              const { model } = JSON.parse(savedSession);
-              return model;
-          }
-      } catch (e) {
-          console.error("Failed to load model from session", e);
-      }
-      return initialModel;
-  }, [initialModel]);
   
-  const { state, set, updatePresent, undo, redo, canUndo, canRedo, reset } = useHistory(getInitialState());
-  const { selectedPose, posedImages, top, bottom, finalImage } = state;
-  const [model, setModel] = useState(getInitialModel);
+  const initialState: IWorkspaceState = {
+    selectedPose: null,
+    posedImages: {},
+    garment: initialGarmentData?.segmented || null,
+    originalGarment: initialGarmentData?.original || null,
+    garmentType: 'full outfit',
+    fabricType: 'None',
+    finalImage: null,
+  };
+
+  const { state, set, updatePresent, undo, redo, canUndo, canRedo, reset } = useHistory(initialState);
+  const { selectedPose, posedImages, garment, originalGarment, garmentType, fabricType, finalImage } = state;
+  const [model, setModel] = useState(initialModel);
   const modelWithPose = selectedPose ? posedImages[selectedPose.name] || null : model.image;
 
   const [isLoadingPoses, setIsLoadingPoses] = useState<Set<string>>(new Set());
   const [isLoadingTryOn, setIsLoadingTryOn] = useState(false);
-  const [isProcessing, setIsProcessing] = useState({ top: false, bottom: false });
-  const [editingSlot, setEditingSlot] = useState<'top' | 'bottom' | null>(null);
+  const [isProcessingFile, setIsProcessingFile] = useState(false);
+  const [isRefining, setIsRefining] = useState(false);
+  const [isEditingGarment, setIsEditingGarment] = useState(false);
   const [notification, setNotification] = useState<{ text: string, type: 'error' | 'success' } | null>(null);
   const [autoApplyAfterPose, setAutoApplyAfterPose] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -93,25 +59,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
   const [isBgModalOpen, setIsBgModalOpen] = useState(false);
   const [isProjectsModalOpen, setIsProjectsModalOpen] = useState(false);
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
-  const [isLiveSessionModalOpen, setIsLiveSessionModalOpen] = useState(false);
-  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
-  const [librarySlot, setLibrarySlot] = useState<'top' | 'bottom'>('top');
-  const [isInpaintingModalOpen, setIsInpaintingModalOpen] = useState(false);
-  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
-
-  useEffect(() => {
-    try {
-        const sessionData = { workspaceState: state, model };
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
-    } catch (e) {
-        console.error("Failed to save workspace session", e);
-    }
-  }, [state, model]);
-
-  const handleGoBack = () => {
-    sessionStorage.removeItem(SESSION_KEY);
-    onGoBack();
-  };
 
   const handleError = (err: any, defaultMessage: string) => {
     console.error(err);
@@ -125,27 +72,25 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
   };
 
   const handleApplyGarment = useCallback(async () => {
-    if (!modelWithPose || (!top && !bottom)) return;
+    if (!modelWithPose || !garment) return;
     setIsLoadingTryOn(true);
     setNotification(null);
     updatePresent({ finalImage: null });
     try {
-      const result = await performVirtualTryOn(modelWithPose, top, bottom);
+      const result = await performVirtualTryOn(modelWithPose, garment, garmentType, fabricType);
       set(currentState => ({ ...currentState, finalImage: result }));
     } catch (err: any) {
       handleError(err, t('errors.virtualTryOn'));
     } finally {
       setIsLoadingTryOn(false);
     }
-  }, [modelWithPose, top, bottom, set, updatePresent, t]);
+  }, [modelWithPose, garment, garmentType, fabricType, set, updatePresent, t]);
 
-  const generateAndSetPose = useCallback(async (pose: Pose, forceRegenerate = false) => {
-    if (!forceRegenerate) {
-      const cachedImage = getCachedPose(model, pose);
-      if (cachedImage) {
-        updatePresent({ posedImages: { ...state.posedImages, [pose.name]: cachedImage } });
-        return;
-      }
+  const generateAndSetPose = useCallback(async (pose: Pose) => {
+    const cachedImage = getCachedPose(model, pose);
+    if (cachedImage) {
+      updatePresent({ posedImages: { ...state.posedImages, [pose.name]: cachedImage } });
+      return;
     }
     if (isLoadingPoses.has(pose.name)) return;
 
@@ -155,9 +100,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
       const posedModelImage = await generateModelPose(model.image, pose.prompt);
       setCachedPose(model, pose, posedModelImage);
       updatePresent({ posedImages: { ...state.posedImages, [pose.name]: posedModelImage } });
-      if (state.finalImage) {
-        setAutoApplyAfterPose(true);
-      }
     } catch (err: any) {
       handleError(err, t('errors.generatePose', { poseName: t(`poses.${pose.name}`) }));
     } finally {
@@ -167,19 +109,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
         return newSet;
       });
     }
-  }, [model, getCachedPose, setCachedPose, updatePresent, state.posedImages, state.finalImage, isLoadingPoses, t]);
+  }, [model, getCachedPose, setCachedPose, updatePresent, state.posedImages, isLoadingPoses, t]);
   
-  useEffect(() => {
-    // Only applies a garment automatically after the very first pose selection if a garment was provided initially
-    const isInitialLoadWithGarment = initialGarmentData && Object.keys(posedImages).length === 0 && !finalImage;
-    if (isInitialLoadWithGarment && POSES.length > 0) {
-        const randomPose = POSES[0];
-        setAutoApplyAfterPose(true);
-        set(currentState => ({ ...currentState, selectedPose: randomPose }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => {
     if (selectedPose && !posedImages[selectedPose.name]) {
       generateAndSetPose(selectedPose);
@@ -187,11 +118,26 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
   }, [selectedPose, posedImages, generateAndSetPose]);
 
   useEffect(() => {
-    if (autoApplyAfterPose && modelWithPose && !isLoadingTryOn && (top || bottom)) {
+    if (initialGarmentData && POSES.length > 0) {
+        const randomPose = POSES[Math.floor(Math.random() * POSES.length)];
+        setAutoApplyAfterPose(true);
+        set(currentState => ({
+            ...currentState,
+            selectedPose: randomPose,
+            garment: initialGarmentData.segmented,
+            originalGarment: initialGarmentData.original,
+            finalImage: null,
+        }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (autoApplyAfterPose && modelWithPose && !isLoadingTryOn && garment) {
       handleApplyGarment();
       setAutoApplyAfterPose(false);
     }
-  }, [autoApplyAfterPose, modelWithPose, isLoadingTryOn, top, bottom, handleApplyGarment]);
+  }, [autoApplyAfterPose, modelWithPose, isLoadingTryOn, garment, handleApplyGarment]);
 
 
   const handlePoseSelect = (pose: Pose) => {
@@ -200,41 +146,66 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
     set(currentState => ({ ...currentState, selectedPose: pose, finalImage: null }));
   };
 
-  const handleFileUpload = async (file: File, slot: 'top' | 'bottom') => {
+  const processFile = async (file: File) => {
     if (!file || !file.type.startsWith('image/')) return;
-    setIsProcessing(prev => ({ ...prev, [slot]: true }));
+    setIsProcessingFile(true);
     setNotification(null);
     try {
         const base64 = await fileToBase64(file);
-        const segmentedGarment = await segmentGarment(base64, slot === 'top' ? 'top only' : 'bottom only');
-        const newGarmentSlot: GarmentSlot = {
-            segmented: segmentedGarment,
-            original: base64,
-            source: 'upload',
-            fabric: 'None',
-        };
+        const segmentedGarment = await segmentGarment(base64, 'full outfit');
         set(currentState => ({
             ...currentState,
-            [slot]: newGarmentSlot,
+            garment: segmentedGarment,
+            originalGarment: base64,
+            garmentType: 'full outfit',
+            fabricType: 'None',
             finalImage: null,
         }));
     } catch (err: any) {
         handleError(err, t('errors.segmentGarment'));
     } finally {
-        setIsProcessing(prev => ({ ...prev, [slot]: false }));
+        setIsProcessingFile(false);
+    }
+  };
+  
+  const resegmentGarment = async (type: GarmentType) => {
+    if (!originalGarment) return;
+    setIsProcessingFile(true);
+    setNotification(null);
+    try {
+        const segmentedGarment = await segmentGarment(originalGarment, type);
+        set(currentState => ({ ...currentState, garment: segmentedGarment, garmentType: type, finalImage: null }));
+    } catch (err: any) {
+        handleError(err, t('errors.resegmentGarment'));
+    } finally {
+        setIsProcessingFile(false);
+    }
+  }
+  
+  const handleRefine = async () => {
+    if (!originalGarment || !garment) return;
+    setIsRefining(true);
+    setNotification(null);
+    try {
+        const refinedGarment = await refineGarmentSegmentation(originalGarment, garment);
+        set(currentState => ({ ...currentState, garment: refinedGarment, finalImage: null }));
+    } catch (err: any) {
+        handleError(err, t('errors.refineGarment'));
+    } finally {
+        setIsRefining(false);
     }
   };
 
-  const handleLibrarySelect = (item: LibraryItem) => {
-      const newGarmentSlot: GarmentSlot = {
-        segmented: item.image,
-        original: null,
-        source: 'library',
-        fabric: 'None', // Default fabric for library items
-      };
-      set(cs => ({ ...cs, [librarySlot]: newGarmentSlot, finalImage: null }));
+  const handleDownload = () => {
+    if (!finalImage) return;
+    const link = document.createElement('a');
+    link.href = `data:image/png;base64,${finalImage}`;
+    link.download = 'virtual-try-on.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
-  
+
   const handleSaveProject = () => {
     if (!finalImage) return;
     const name = prompt(t('myProjectsModal.namePrompt'), `${t('myProjectsModal.defaultProjectName')} ${new Date().toLocaleString()}`);
@@ -261,31 +232,21 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
     setIsProjectsModalOpen(false);
     setNotification({ text: t('toasts.projectLoaded'), type: 'success' });
   };
-
-  const handleSaveInpainting = async (mask: string, prompt: string) => {
-    if (!finalImage) return;
-    try {
-      const result = await performInpainting(finalImage, mask, prompt);
-      set(s => ({ ...s, finalImage: result }));
-    } catch (err: any) {
-      handleError(err, t('errors.inpaintingFailed'));
-    }
-  };
    
   const isCurrentPoseLoading = selectedPose ? isLoadingPoses.has(selectedPose.name) : false;
   
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Toast message={notification?.text || ''} type={notification?.type} onDismiss={() => setNotification(null)} />
-      {editingSlot && state[editingSlot]?.original && state[editingSlot]?.segmented && (
+      {isEditingGarment && originalGarment && garment && (
           <GarmentEditor
-              originalImage={state[editingSlot]!.original!}
-              segmentedImage={state[editingSlot]!.segmented}
+              originalImage={originalGarment}
+              segmentedImage={garment}
               onSave={(refinedGarment) => {
-                set(cs => ({ ...cs, [editingSlot]: { ...cs[editingSlot]!, segmented: refinedGarment }, finalImage: null }));
-                setEditingSlot(null);
+                set(cs => ({ ...cs, garment: refinedGarment, finalImage: null }));
+                setIsEditingGarment(false);
               }}
-              onCancel={() => setEditingSlot(null)}
+              onCancel={() => setIsEditingGarment(false)}
           />
       )}
       <aside className="w-64 bg-white p-6 flex-col justify-between border-r border-gray-200 hidden lg:flex">
@@ -301,7 +262,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
             <LanguageSwitcher />
           </div>
           <nav className="space-y-2">
-            <button onClick={handleGoBack} className="w-full flex items-center space-x-3 text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-100">
+            <button onClick={onGoBack} className="w-full flex items-center space-x-3 text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-100">
               <span>{t('nav.home')}</span>
             </button>
             <div className="flex items-center space-x-3 text-blue-600 font-semibold bg-blue-50 px-3 py-2 rounded-lg">
@@ -313,7 +274,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
           </nav>
         </div>
         <div>
-            <Button variant="secondary" onClick={handleGoBack} className="w-full">{t('buttons.backToModels')}</Button>
+            <Button variant="secondary" onClick={onGoBack} className="w-full">{t('buttons.backToModels')}</Button>
         </div>
       </aside>
       
@@ -341,7 +302,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
                         </button>
                     </div>
                     <nav className="space-y-2">
-                        <button onClick={() => { handleGoBack(); setIsMobileMenuOpen(false); }} className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100">{t('buttons.backToModels')}</button>
+                        <button onClick={() => { onGoBack(); setIsMobileMenuOpen(false); }} className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100">{t('buttons.backToModels')}</button>
                         <button onClick={() => { setIsProjectsModalOpen(true); setIsMobileMenuOpen(false); }} className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100">{t('workspace.sidebar.myProjects')}</button>
                     </nav>
                 </div>
@@ -349,7 +310,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
         )}
         
         <div className="lg:col-span-2">
-            <PoseSelector poses={POSES} selectedPose={selectedPose} loadingPoses={isLoadingPoses} onPoseSelect={handlePoseSelect} onRegeneratePose={(pose) => generateAndSetPose(pose, true)} />
+            <PoseSelector poses={POSES} selectedPose={selectedPose} loadingPoses={isLoadingPoses} onPoseSelect={handlePoseSelect} />
         </div>
         
         <div className="lg:col-span-7">
@@ -358,24 +319,30 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
                 finalImage={finalImage}
                 isCurrentPoseLoading={isCurrentPoseLoading}
                 isLoadingTryOn={isLoadingTryOn}
-                isGarmentReady={!!(top || bottom)}
-                onFixDetail={() => setIsInpaintingModalOpen(true)}
+                isGarmentReady={!!garment}
             />
         </div>
 
         <div className="lg:col-span-3">
             <GarmentControls 
-                top={top}
-                bottom={bottom}
+                originalGarment={originalGarment}
+                garment={garment}
+                fabricType={fabricType}
                 finalImage={finalImage}
-                isProcessing={isProcessing}
+                isProcessingFile={isProcessingFile}
+                isRefining={isRefining}
                 isLoadingTryOn={isLoadingTryOn}
                 canUndo={canUndo}
                 canRedo={canRedo}
-                isApplyDisabled={!modelWithPose || (!top && !bottom) || isLoadingTryOn || isCurrentPoseLoading || isProcessing.top || isProcessing.bottom}
-                onFileUpload={handleFileUpload}
-                onLibraryOpen={(slot) => { setLibrarySlot(slot); setIsLibraryOpen(true); }}
-                onFabricChange={(fabric, slot) => set(cs => ({ ...cs, [slot]: cs[slot] ? { ...cs[slot]!, fabric } : null }))}
+                isApplyDisabled={!modelWithPose || !garment || isLoadingTryOn || (isProcessingFile || isRefining) || isCurrentPoseLoading}
+                onFileSelected={processFile}
+                onResegment={resegmentGarment}
+                onRefine={handleRefine}
+                onEdit={() => setIsEditingGarment(true)}
+                onFabricChange={(newFabric) => {
+                    if (newFabric === fabricType) return;
+                    set(cs => ({ ...cs, fabricType: newFabric, finalImage: null }));
+                }}
                 onApply={handleApplyGarment}
                 onUndo={undo}
                 onRedo={redo}
@@ -383,9 +350,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
                 onChangeBackground={() => setIsBgModalOpen(true)}
                 onBatchGenerate={() => setIsBatchModalOpen(true)}
                 onSaveProject={handleSaveProject}
-                onDownload={() => setIsDownloadModalOpen(true)}
-                onLiveSession={() => setIsLiveSessionModalOpen(true)}
-                onRemoveItem={(slot) => set(cs => ({ ...cs, [slot]: null, finalImage: null }))}
+                onDownload={handleDownload}
             />
         </div>
       </main>
@@ -414,47 +379,20 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
         onNotify={(text, type) => setNotification({ text, type })}
       />
       
-      {(top || bottom) && (
+      {garment && originalGarment && (
         <BatchProcessingModal
           isOpen={isBatchModalOpen}
           onClose={() => setIsBatchModalOpen(false)}
           initialModel={model}
           garmentData={{
-            segmented: top?.segmented || bottom!.segmented, // Needs better logic for batching
-            original: top?.original || bottom!.original!,
-            garmentType: 'full outfit',
-            fabricType: top?.fabric || bottom!.fabric,
+            segmented: garment,
+            original: originalGarment,
+            garmentType: garmentType,
+            fabricType: fabricType
           }}
           onNotify={(text, type) => setNotification({ text, type })}
         />
       )}
-
-      <LiveSessionModal
-        isOpen={isLiveSessionModalOpen}
-        onClose={() => setIsLiveSessionModalOpen(false)}
-        onNotify={(text, type) => setNotification({ text, type })}
-      />
-
-      <StylingLibraryModal
-        isOpen={isLibraryOpen}
-        onClose={() => setIsLibraryOpen(false)}
-        onSelect={handleLibrarySelect}
-        garmentSlot={librarySlot}
-      />
-
-      <InpaintingModal
-        isOpen={isInpaintingModalOpen}
-        onClose={() => setIsInpaintingModalOpen(false)}
-        image={finalImage}
-        onSave={handleSaveInpainting}
-      />
-
-      <DownloadModal
-        isOpen={isDownloadModalOpen}
-        onClose={() => setIsDownloadModalOpen(false)}
-        image={finalImage}
-        onNotify={(text, type) => setNotification({ text, type })}
-      />
 
     </div>
   );

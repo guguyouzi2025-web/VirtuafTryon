@@ -1,3 +1,4 @@
+
 import { ModelCriteria, GarmentType } from './types';
 
 const getBuildDescription = (build: string): string => {
@@ -114,103 +115,96 @@ Output a full body photograph set against the same plain, seamless, pure white s
 const getFabricDescription = (fabric: string): string => {
     switch (fabric) {
         case "Cotton":
-            return "Render the fabric as **Cotton**: a soft, matte finish that absorbs light, with natural, gentle micro-wrinkles and a comfortable, breathable drape.";
+            return "Render the fabric with a soft, matte finish and natural, gentle wrinkles. Emphasize its comfortable drape.";
         case "Silk":
-            return "Render the fabric as **Silk**: a high-sheen, fluid material with sharp specular highlights. It should have a liquid-like, flowing drape that clings to the body and forms fine, delicate wrinkles.";
+            return "Render the fabric with a noticeable, smooth sheen and a fluid, flowing drape. Create fine, delicate wrinkles where it gathers.";
         case "Denim":
-            return "Render the fabric as **Denim**: a sturdy, heavy material with a distinct diagonal twill weave texture. It has a matte finish and a stiff structure, creating characteristic sharp creases and folds.";
+            return "Render the fabric with a sturdy, slightly textured matte finish and a stiffer structure. Create characteristic creases and folds, especially around joints.";
         case "Leather":
-            return "Render the fabric as **Leather**: a material with a distinct, semi-gloss sheen and strong light reflections. Give it a structured, heavy weight that creates defined, substantial folds and creases.";
+            return "Render the fabric with a distinct sheen and reflections. Give it a structured, heavier weight and create defined folds and creases.";
         case "Wool":
-            return "Render the fabric as **Wool**: a thick, heavy material with a soft, slightly fuzzy texture that diffuses light. It should have a heavy drape with soft, thick folds rather than sharp wrinkles.";
+            return "Render the fabric with a soft, slightly fuzzy texture and a heavy drape. It should have soft, thick folds rather than sharp wrinkles.";
         default:
-            return "Drape the new garment naturally on the person's body, respecting its apparent material.";
+            return "Drape the new garment naturally on the person's body.";
     }
 }
 
 /**
- * Generates a prompt for the virtual try-on task based on the garments provided.
- * @param garmentConfig - An object indicating which garments are provided and their fabrics.
+ * Generates a prompt for the virtual try-on task based on the garment type.
+ * @param garmentType - The type of garment being applied ('full outfit', 'top only', 'bottom only').
+ * @param fabricType - The primary fabric of the garment.
  * @returns A specific string prompt for the virtual try-on.
  */
-export const getVirtualTryOnPrompt = (garmentConfig: { top?: { fabric: string }, bottom?: { fabric: string } }): string => {
-  const hasTop = !!garmentConfig.top;
-  const hasBottom = !!garmentConfig.bottom;
-  
-  let imageSources = "1.  **Target Model:** The person to dress. Their pose, body shape, and lighting are the target context.";
-  let partIndex = 2;
-  if (hasTop) {
-    imageSources += `\n${partIndex}.  **Top Garment:** The clothing for the upper body, isolated on a transparent background. This is your source of truth for the top.`;
-    partIndex++;
-  }
-  if (hasBottom) {
-    imageSources += `\n${partIndex}.  **Bottom Garment:** The clothing for the lower body, isolated on a transparent background. This is your source of truth for the bottom.`;
-  }
-  
-  let taskInstruction = '';
-  let preservationRule = '';
-  
-  if (hasTop && hasBottom) {
-    taskInstruction = "Replace the **entire outfit** on the **Target Model** using the **Top Garment** and **Bottom Garment** provided.";
-    preservationRule = "**REPLACE ALL CLOTHING:** You MUST replace every single piece of clothing on the Target Model. Do NOT preserve the original pants, shirt, or any other garment.";
-  } else if (hasTop) {
-    taskInstruction = "Replace **only the top garment** (e.g., shirt, t-shirt, jacket) on the **Target Model** using the provided **Top Garment** image.";
-    preservationRule = "**PRESERVE BOTTOMS:** The Target Model's original pants, skirt, or any lower body clothing MUST remain completely unchanged.";
-  } else if (hasBottom) {
-    taskInstruction = "Replace **only the bottom garment** (e.g., pants, skirt, shorts) on the **Target Model** using the provided **Bottom Garment** image.";
-    preservationRule = "**PRESERVE TOP:** The Target Model's original shirt, t-shirt, or any upper body clothing MUST remain completely unchanged.";
-  }
+export const getVirtualTryOnPrompt = (garmentType: GarmentType, fabricType: string): string => {
+  let instructions = '';
+  const fabricRule = `**Fabric Rendering:** ${getFabricDescription(fabricType)}`;
 
-  let fabricRules = [];
-  if (hasTop) fabricRules.push(`**Top Fabric:** ${getFabricDescription(garmentConfig.top!.fabric)}`);
-  if (hasBottom) fabricRules.push(`**Bottom Fabric:** ${getFabricDescription(garmentConfig.bottom!.fabric)}`);
-  
-  const prompt = `
+  const baseInstructions = `
 **Source Images:**
-You are provided with the following images:
-${imageSources}
-
-**Task:** ${taskInstruction}
+You are provided with two images:
+1.  **Target Model:** The person to dress.
+2.  **Segmented Garment:** The clothing isolated on a transparent background. This is your **source of truth** for shape, texture, color, and fine details.
 
 **Crucial Rules:**
-1.  **Absolute Fidelity to Source:** The final rendered garment(s) MUST perfectly match the texture, material, color, patterns, and all fine details from the source Garment image(s). This is the highest priority.
-2.  **Strict Proportion Preservation:** The garment's original length and proportions must be strictly maintained. A crop top must remain a crop top.
-3.  **Preserve Person & Background:** Do NOT change the Target Model's face, hair, body shape, pose, or the background.
-4.  **Realistic Draping & Fit:** The garment(s) must be draped naturally, conforming to the body and pose. Lighting, colors, and shadows must be consistent with the Target Model's photo.
-5.  **Fabric Rendering:** ${fabricRules.join(' ')}
-6.  ${preservationRule}
-`;
-  return prompt;
-};
+1.  **Fidelity to Source:** The final rendered garment MUST perfectly match the texture, material, color, and fine details (like seams, prints, or embroidery) from the **Segmented Garment** image. This is the highest priority.
+2.  **Preserve Person & Background:** Do NOT change the Target Model's face, hair, body shape, pose, or the background.
+3.  **Realistic Fit:** The garment must look completely natural on the person, aligning with their body shape and pose. All lighting, colors, and shadows must be consistent with the Target Model's photo.
+4.  ${fabricRule}`;
 
+  switch (garmentType) {
+    case 'top only':
+      instructions = `**Task:** Replace *only the top garment* (e.g., shirt, t-shirt, jacket) on the **Target Model** using the provided **Segmented Garment** image.
+
+${baseInstructions}
+
+5.  **PRESERVE BOTTOMS:** The Target Model's original pants, skirt, or any lower body clothing MUST remain completely unchanged.`;
+      break;
+    
+    case 'bottom only':
+      instructions = `**Task:** Replace *only the bottom garment* (e.g., pants, skirt, shorts) on the **Target Model** using the provided **Segmented Garment** image.
+
+${baseInstructions}
+
+5.  **PRESERVE TOP:** The Target Model's original shirt, t-shirt, or any upper body clothing MUST remain completely unchanged.`;
+      break;
+
+    case 'full outfit':
+    default:
+      instructions = `**Task:** Replace the **entire outfit** on the **Target Model** with the new clothing from the **Segmented Garment** image. This is a **full body replacement**.
+
+${baseInstructions}
+
+5.  **MANDATORY INSTRUCTION: REPLACE ALL CLOTHING.** It is not optional. You MUST replace **every single piece of clothing** on the Target Model. Do NOT preserve the original pants, shirt, or any other garment, even if they look similar to the new ones. The final image must ONLY show the model wearing the new outfit provided. Both top and bottom garments from the original model MUST be removed and replaced.`;
+      break;
+  }
+
+  return instructions;
+};
 
 /**
  * Generates a prompt for segmenting a full outfit from an image.
  * @returns A string prompt that instructs the model to isolate a full outfit and return it on a transparent background.
  */
 export const getGarmentSegmentationPrompt = (garmentType: GarmentType = 'full outfit'): string => {
-  let garmentDescription: string;
-  switch (garmentType) {
-    case 'top only':
-      garmentDescription = "the top clothing item (e.g., shirt, t-shirt, jacket)";
-      break;
-    case 'bottom only':
-      garmentDescription = "the bottom clothing item (e.g., pants, skirt, shorts)";
-      break;
-    default: // 'full outfit'
-      garmentDescription = "the entire outfit";
+  if (garmentType === 'full outfit') {
+    // User's suggested prompt, adapted for a transparent background and with extra instructions for clarity.
+    return `Extract each clothing from the photo and place them separately on a transparent background.
+Remove the person entirely and reconstruct any hidden parts of the clothing.
+Preserve all original details like fabric texture, color, and lighting.`;
   }
 
-  return `
-**Task: Isolate Garment**
-Your goal is to extract **only ${garmentDescription}** from the provided photograph.
-
-**Crucial Rules:**
-1.  **Complete Isolation:** The output MUST be the garment alone on a perfectly transparent background.
-2.  **Aggressive Removal:** It is critical to remove every single trace of the person, mannequin, hanger, or any background elements. Be meticulous.
-3.  **Reconstruct Hidden Parts:** Intelligently reconstruct any parts of the garment that were obscured by the person or other objects.
-4.  **Preserve Fidelity:** The garment's original fabric texture, color, lighting, shadows, and fine details MUST be preserved perfectly.
-`;
+  let targetGarmentDescription: string;
+  // The remaining cases are for top or bottom only
+  if (garmentType === 'top only') {
+    targetGarmentDescription = "the top clothing item (e.g., shirt, blouse, t-shirt, jacket)";
+  } else { // 'bottom only'
+    targetGarmentDescription = "the bottom clothing item (e.g., pants, skirt, shorts)";
+  }
+  
+  return `Extract ${targetGarmentDescription} from the photo.
+The result must be ONLY the garment on a transparent background.
+Remove the person entirely and reconstruct any hidden parts of the clothing.
+Preserve all original details like fabric texture, color, and lighting.`;
 }
 
 /**
@@ -273,56 +267,14 @@ You are given an image of a person wearing an outfit. Your task is to replace ON
 
 export const getChangeBackgroundPrompt = (backgroundDescription: string): string => {
   return `
-**Task: Photorealistic Background Replacement**
-You are provided with a photograph of a person. Your task is to replace the existing background with a new, hyper-realistic one described below.
+**Task: Change Background**
+You are provided with a photograph of a person. Your goal is to replace the background with a new one.
 
 **New Background Description:** "${backgroundDescription}"
 
-**CRITICAL INSTRUCTIONS - Adhere Strictly:**
-
-1.  **SUBJECT INTEGRITY IS PARAMOUNT:** The person, including their clothing, pose, hair, and any accessories, MUST remain absolutely identical. **DO NOT CHANGE THE SUBJECT.**
-
-2.  **FORENSIC LIGHTING ANALYSIS:** Before rendering, you MUST perform a detailed analysis of the new background's lighting environment. Identify:
-    *   **Primary Light Source(s):** Direction (e.g., top-left, back-right), color (e.g., warm golden hour sun, cool overcast sky), and hardness (e.g., sharp, direct sun creating hard shadows; or soft, diffused light from a cloudy sky).
-    *   **Ambient Light:** The overall color and intensity of the indirect light filling the scene.
-    *   **Reflections & Bounces:** Note any colored light bouncing off surfaces in the new background (e.g., green light bouncing from grass, warm light from a wooden wall).
-
-3.  **APPLY ANALYZED LIGHTING TO SUBJECT:** You MUST meticulously re-light the subject to match the analyzed environment.
-    *   **Highlights:** Place highlights on the subject that perfectly correspond to the direction and quality of the main light source(s).
-    *   **Shadows:** Cast realistic shadows from the subject onto the new background. The subject's own self-shadowing must also be adjusted to match the light direction. Shadow hardness must match the light source hardness.
-    *   **Color Grading:** Subtly color grade the subject to match the ambient light and color bounces of the new scene. The subject must feel like they are *truly in* the environment, not cut and pasted.
-
-4.  **SEAMLESS COMPOSITION:** The final image must be indistinguishable from a real photograph. Pay extreme attention to edges, perspective, and depth of field to ensure a flawless composite.
-`;
-};
-
-export const getInpaintingPrompt = (correctionPrompt: string): string => {
-  return `
-**Task: Inpainting Correction**
-You are provided with three inputs: 1. A base image, 2. A mask image, 3. A text prompt.
-
-Your goal is to edit the base image **only in the area defined by the white parts of the mask**.
-
-**Correction Instruction:** "${correctionPrompt}"
-
 **Crucial Rules:**
-1.  **STRICT MASK ADHERENCE:** You MUST NOT change any part of the base image that is outside the masked area (the black region). The unmasked area must remain absolutely identical to the original.
-2.  **SEAMLESS BLENDING:** The edited area must blend seamlessly with the surrounding image. Match the original texture, lighting, grain, and color palette perfectly.
-3.  **PHOTOREALISM:** The final output must be a high-quality, photorealistic image.
-4.  **FOLLOW THE PROMPT:** The change you make inside the mask must accurately reflect the user's text prompt.
-`;
-};
-
-export const getUpscalePrompt = (): string => {
-  return `
-**Task: AI Image Upscaling and Enhancement**
-You are provided with a single image. Your task is to upscale this image to 4K resolution (approximately 3840x2160 pixels, maintaining the original aspect ratio).
-
-**CRITICAL INSTRUCTIONS - Adhere Strictly:**
-
-1.  **ENHANCE DETAILS:** Intelligently add finer details to textures, fabrics, hair, and skin. Sharpen edges and improve overall clarity.
-2.  **NO CONTENT CHANGE:** You MUST NOT add, remove, or change any objects, elements, or the composition of the original image. The content must remain identical.
-3.  **PRESERVE PHOTOREALISM:** The final output must be a hyper-realistic, high-quality photograph, free of digital artifacts. Maintain the original lighting, colors, and mood.
-4.  **4K RESOLUTION:** The output image dimensions should be as close to 4K as possible while preserving the aspect ratio of the input image.
+1.  **Preserve the Subject:** The person, their clothing, their pose, and any objects they are holding MUST remain completely unchanged. Do not alter them in any way.
+2.  **Realistic Lighting:** Adjust the lighting on the person to realistically match the new background environment. For example, if the new background is a sunny beach, the person should be lit by bright sunlight.
+3.  **Seamless Composite:** The final image should look like a real photograph, not an obvious composite. Ensure edges are clean and the perspective matches.
 `;
 };

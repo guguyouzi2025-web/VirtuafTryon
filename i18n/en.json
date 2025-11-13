@@ -19,7 +19,7 @@
     "refineAI": "Refine (AI)",
     "refineManual": "Edit",
     "refining": "Refining...",
-    "applyGarment": "Apply",
+    "applyGarment": "Apply Garment",
     "applying": "Applying...",
     "saveChanges": "Save Changes",
     "cancel": "Cancel",
@@ -31,9 +31,7 @@
     "random": "Random",
     "custom": "Custom",
     "close": "Close",
-    "myCollection": "My Collection",
-    "liveSession": "Live Session",
-    "fixDetail": "Fix Detail"
+    "myCollection": "My Collection"
   },
   "modelCreation": {
     "title": "Create Your Virtual Model",
@@ -144,23 +142,6 @@
     "finalImageAlt": "Final try-on result",
     "fabricType": "Fabric Type"
   },
-  "styling": {
-    "title": "Styling",
-    "top": "Top",
-    "bottom": "Bottom",
-    "upload": "Upload",
-    "library": "Library",
-    "source": "Source",
-    "selectTop": "Select a Top",
-    "selectBottom": "Select a Bottom"
-  },
-  "stylingLibrary": {
-    "white_t-shirt": "White T-Shirt",
-    "black_tank_top": "Black Tank Top",
-    "blue_jeans": "Blue Jeans",
-    "black_trousers": "Black Trousers",
-    "denim_skirt": "Denim Skirt"
-  },
   "errors": {
     "generateModels": "Failed to generate models. Please try again.",
     "generatePose": "Failed to generate pose: {{poseName}}.",
@@ -174,10 +155,7 @@
     "smartMatchFailed": "Smart match failed. Please try again or create a model manually.",
     "analyzeGarment": "Failed to analyze garment style. Please try again.",
     "generationFailed": "Generation failed.",
-    "safetyBlock": "Generation failed due to safety policies. Please try adjusting your description or settings.",
-    "liveSessionPermissions": "Camera and microphone access is required for a live session.",
-    "liveSessionFailed": "Live session failed to connect. Please try again.",
-    "inpaintingFailed": "Failed to fix detail. Please try again."
+    "safetyBlock": "Generation failed due to safety policies. Please try adjusting your description or settings."
   },
   "swapModelModal": {
     "title": "Swap Model",
@@ -214,34 +192,6 @@
     "delete": "Delete",
     "namePrompt": "Enter a name for your project:",
     "defaultProjectName": "Project"
-  },
-  "liveSessionModal": {
-    "title": "Live Styling Session",
-    "description": "Start a live video chat with our AI Stylist. Show your outfit and get real-time feedback and advice.",
-    "start": "Start Session",
-    "end": "End Session",
-    "connecting": "Connecting...",
-    "active": "Session Active",
-    "you": "You",
-    "stylist": "Stylist"
-  },
-  "inpaintingModal": {
-    "title": "Fix Detail",
-    "instruction": "1. Use the brush to mask the area you want to change.",
-    "promptLabel": "2. Describe the correction:",
-    "promptPlaceholder": "e.g., Change the logo to a red circle",
-    "correcting": "Correcting..."
-  },
-  "downloadModal": {
-    "title": "Download Image",
-    "standardJPG": "Standard (JPG)",
-    "standardJPGDescription": "Good quality, smaller file size.",
-    "originalPNG": "Original (PNG)",
-    "originalPNGDescription": "Highest quality, larger file size.",
-    "aiEnhance4K": "AI Enhance (4K)",
-    "aiEnhance4KDescription": "Upscale to 4K. May take a moment.",
-    "upscaling": "Upscaling...",
-    "errorUpscaling": "AI enhancement failed. Please try again."
   },
   "toasts": {
     "projectSaved": "Project saved successfully!",
@@ -332,43 +282,11 @@
     "white": "White"
   },
   "hairStyles": {
-    "long_straight": "Long Straight",
-    "long_wavy": "Long Wavy",
-    "long_curly": "Long Curly",
+    "short_pixie_cut": "Short Pixie Cut",
     "medium_wavy": "Medium Wavy",
-    "medium_straight": "Medium Straight",
-    "short_bob": "Short Bob",
-    "pixie_cut": "Pixie Cut",
+    "long_straight": "Long Straight",
     "curly_afro": "Curly Afro",
-    "high_ponytail": "High Ponytail",
-    "elegant_updo": "Elegant Updo",
-    "box_braids": "Box Braids",
-    "messy_bun": "Messy Bun",
-    "wavy_lob": "Wavy Lob",
-    "bangs": "Bangs",
-    "shag_cut": "Shag Cut",
-    "cornrows": "Cornrows",
-    "dreadlocks": "Dreadlocks",
-    "top_knot": "Top Knot",
-    "french_braid": "French Braid",
-    "fishtail_braid": "Fishtail Braid",
-    "space_buns": "Space Buns",
-    "short_and_tidy": "Short and Tidy",
-    "crew_cut": "Crew Cut",
-    "slicked_back": "Slicked Back",
-    "undercut": "Undercut",
-    "fade": "Fade",
-    "man_bun": "Man Bun",
-    "curly_top": "Curly Top",
-    "quiff": "Quiff",
-    "buzz_cut": "Buzz Cut",
-    "pompadour": "Pompadour",
-    "comb_over": "Comb Over",
-    "french_crop": "French Crop",
-    "textured_crop": "Textured Crop",
-    "spiky_hair": "Spiky Hair",
-    "side_part": "Side Part",
-    "mohawk": "Mohawk"
+    "slicked_back": "Slicked Back"
   },
   "eyeColors": {
     "brown": "Brown",

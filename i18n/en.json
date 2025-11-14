@@ -1,3 +1,4 @@
+
 {
   "nav": {
     "home": "Home",
@@ -16,6 +17,7 @@
     "browse": "Browse files",
     "replaceGarment": "Replace Garment",
     "download": "Download",
+    "export": "Export",
     "downloadSelected": "Download Selected",
     "refineAI": "Refine (AI)",
     "refineManual": "Edit",
@@ -30,6 +32,7 @@
     "swapModel": "Swap Model",
     "changeBackground": "Change Background",
     "batchGenerate": "Batch Generate",
+    "composeScene": "Compose Scene",
     "random": "Random",
     "custom": "Custom",
     "close": "Close",
@@ -41,7 +44,15 @@
     "comingSoon": "Coming Soon",
     "upscaling": "Upscaling...",
     "regeneratePose": "Regenerate pose",
-    "refineModel": "Refine Model"
+    "refineModel": "Refine Model",
+    "saveAsTemplate": "Save as Template",
+    "login": "Login / Register",
+    "loginGuest": "Login as Guest",
+    "logout": "Logout",
+    "share": "Share",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "addComment": "Add Comment"
   },
   "modelCreation": {
     "title": "Create Your Virtual Model",
@@ -73,7 +84,13 @@
       "title": "Smart Match",
       "subtitle": "Have a garment? Upload it and we'll generate the perfect model for you instantly.",
       "loading": "Analyzing style & creating your model...",
-      "cta": "Drag & drop or click to upload"
+      "cta": "Drag & drop or click to upload",
+      "progress": {
+        "uploading": "Reading file...",
+        "segmenting": "Segmenting garment...",
+        "analyzing": "Analyzing style...",
+        "generatingModel": "Generating your model..."
+      }
     },
     "primaryFeatures": "Primary Features",
     "bodyDetails": "Body Details",
@@ -87,7 +104,17 @@
       "subtitle": "Select a previously saved model to start a new session.",
       "empty": "Your collection is empty. Generate and collect some models!"
     },
-    "or": "OR"
+    "or": "OR",
+    "tabs": {
+        "create": "Create Custom",
+        "smartMatch": "Smart Match",
+        "templates": "Templates"
+    },
+    "templates": {
+        "title": "Start from a Template",
+        "subtitle": "Select a saved template to quickly set up your scene.",
+        "empty": "You have no saved templates. Create some in the workspace!"
+    }
   },
   "smartMatchResult": {
     "title": "Smart Match Results",
@@ -120,12 +147,15 @@
     "sidebar": {
         "workspace": "Workspace",
         "myProjects": "My Projects",
-        "saveProject": "Save Project"
+        "sceneEditor": "Scene Editor",
+        "saveProject": "Save Project",
+        "saveTemplate": "Save as Template"
     },
     "loading": {
         "generatingPose": "Generating Pose...",
         "resegmenting": "Re-segmenting...",
-        "applyingGarment": "Applying Garment..."
+        "applyingGarment": "Applying Garment...",
+        "loadingTemplate": "Loading Template..."
     },
     "selectPose": "Select Pose",
     "posedModel": "Model Preview",
@@ -158,6 +188,19 @@
     "fabricType": "Fabric Type",
     "bottomsLibrary": "Pair with Bottoms"
   },
+  "sceneEditor": {
+    "title": "Scene Editor",
+    "addModel": "Add Model from Projects",
+    "generate": "Generate Scene",
+    "generating": "Harmonizing Scene...",
+    "layers": "Layers",
+    "noProjects": "You have no saved projects with a final image. Please create and save some projects first.",
+    "noLayers": "Add models from your projects to begin building a scene.",
+    "segmenting": "Segmenting...",
+    "segmentationFailed": "Segmentation Failed",
+    "resultTitle": "Generated Scene",
+    "backToEditor": "Back to Editor"
+  },
   "addGarmentModal": {
     "title": "Add New Garment",
     "uploadStep": "1. Upload Image",
@@ -181,7 +224,9 @@
     "safetyBlock": "Generation failed due to safety policies. Please try adjusting your description or settings.",
     "inpaintFailed": "Partial redraw failed. Please try again.",
     "upscaleFailed": "HD processing failed. Please try again.",
-    "refineModelFailed": "Model refinement failed. Please try again."
+    "refineModelFailed": "Model refinement failed. Please try again.",
+    "segmentPersonFailed": "Failed to segment person from image.",
+    "harmonizeSceneFailed": "Failed to harmonize the scene. Please try again."
   },
   "swapModelModal": {
     "title": "Swap Model",
@@ -228,14 +273,35 @@
     "empty": "You have no saved projects.",
     "load": "Load",
     "delete": "Delete",
+    "add": "Add",
     "namePrompt": "Enter a name for your project:",
-    "defaultProjectName": "Project"
+    "defaultProjectName": "Project",
+    "shareTitle": "Share Project",
+    "shareDescription": "Anyone with this link can view and comment on the project.",
+    "shareLinkCopied": "Share link copied to clipboard!"
+  },
+  "myTemplatesModal": {
+    "namePrompt": "Enter a name for your template:",
+    "defaultTemplateName": "Template"
+  },
+  "exportModal": {
+    "title": "Crop & Export",
+    "export": "Export"
+  },
+  "shareView": {
+    "title": "Project Preview",
+    "notFound": "Project not found or has been deleted.",
+    "commentsTitle": "Comments",
+    "commentPlaceholder": "Leave a comment...",
+    "noComments": "No comments yet."
   },
   "toasts": {
-    "projectSaved": "Project saved successfully!",
+    "projectSaved": "Project saved & synced to cloud!",
     "projectLoaded": "Project loaded.",
     "projectDeleted": "Project deleted.",
-    "modelRefined": "Model updated. Poses will be re-generated upon selection."
+    "modelRefined": "Model updated. Poses will be re-generated upon selection.",
+    "templateSaved": "Template saved successfully!",
+    "autoLogin": "Logged in as Guest to save your project."
   },
   "onboarding": {
     "welcomeTitle": "Welcome to the Workspace!",
@@ -261,6 +327,11 @@
     "beach_sunset": "Beach Sunset",
     "modern_loft": "Modern Loft",
     "forest_path": "Forest Path"
+  },
+  "exportPresets": {
+    "instagram_story": "Instagram Story (9:16)",
+    "taobao_main": "E-commerce Square (1:1)",
+    "facebook_post": "Social Post (1.91:1)"
   },
   "nationalities": {
     "american": "American",

@@ -54,6 +54,22 @@ export interface WorkspaceState {
   garmentType: GarmentType;
   fabricType: string;
   finalImage: string | null;
+  backgroundPrompt: string | null;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  avatarUrl?: string;
+}
+
+export interface Comment {
+    id: string;
+    author: {
+        name: string;
+    };
+    text: string;
+    createdAt: string;
 }
 
 export interface SavedProject {
@@ -62,10 +78,38 @@ export interface SavedProject {
   thumbnail: string;
   initialModel: Model;
   workspaceState: WorkspaceState;
+  shareId?: string;
+  comments?: Comment[];
 }
 
 export interface Bottom {
     name: string;
     thumbnail: string;
     segmented: string;
+}
+
+export interface ProjectTemplate {
+  id: string;
+  name: string;
+  thumbnail: string;
+  model: Model;
+  poseName: string;
+  backgroundPrompt: string;
+}
+
+export interface ExportPreset {
+  name: string;
+  width: number;
+  height: number;
+}
+
+export interface SceneLayer {
+  id: string; // Unique ID for this layer instance in the scene
+  project: SavedProject;
+  x: number;
+  y: number;
+  scale: number;
+  zIndex: number;
+  segmentedImage: string | null;
+  isSegmenting: boolean;
 }

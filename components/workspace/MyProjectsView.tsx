@@ -1,17 +1,19 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '../shared/Button';
 import { useI18n } from '../../i18n/i18n';
 import { SavedProject } from '../../types';
-import { TrashIcon } from '../icons';
+import { TrashIcon, ShareIcon, CloudIcon } from '../icons';
 
 interface MyProjectsViewProps {
   onLoadProject: (project: SavedProject) => void;
+  onShareProject: (project: SavedProject) => void;
   onNotify: (message: string, type: 'success' | 'error') => void;
 }
 
 const PROJECTS_KEY = 'virtualTryOnProjects';
 
-export const MyProjectsView: React.FC<MyProjectsViewProps> = ({ onLoadProject, onNotify }) => {
+export const MyProjectsView: React.FC<MyProjectsViewProps> = ({ onLoadProject, onShareProject, onNotify }) => {
     const { t } = useI18n();
     const [projects, setProjects] = useState<SavedProject[]>([]);
 
@@ -42,14 +44,21 @@ export const MyProjectsView: React.FC<MyProjectsViewProps> = ({ onLoadProject, o
                         <div key={project.id} className="group relative border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                             <img src={`data:image/png;base64,${project.thumbnail}`} alt={project.name} className="w-full h-auto object-cover aspect-[3/4]" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-3 flex flex-col justify-end">
-                                <p className="text-white font-bold text-sm truncate">{project.name}</p>
+                                <div className="flex items-center gap-1.5">
+                                    <CloudIcon className="w-4 h-4 text-white/80" />
+                                    <p className="text-white font-bold text-sm truncate">{project.name}</p>
+                                </div>
                             </div>
-                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
-                                <Button onClick={() => onLoadProject(project)} className="w-full">{t('myProjectsModal.load')}</Button>
-                                <Button variant="secondary" onClick={() => handleDeleteProject(project.id)} className="w-full !bg-red-500 hover:!bg-red-600 text-white flex items-center justify-center gap-1">
-                                    <TrashIcon className="w-4 h-4" />
-                                    <span>{t('myProjectsModal.delete')}</span>
+                            <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Button size="sm" variant="secondary" onClick={() => onShareProject(project)} className="!p-2 !rounded-full">
+                                    <ShareIcon className="w-5 h-5" />
                                 </Button>
+                                <Button size="sm" variant="secondary" onClick={() => handleDeleteProject(project.id)} className="!p-2 !rounded-full !bg-red-500 hover:!bg-red-600 text-white">
+                                    <TrashIcon className="w-5 h-5" />
+                                </Button>
+                            </div>
+                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <Button onClick={() => onLoadProject(project)}>{t('myProjectsModal.load')}</Button>
                             </div>
                         </div>
                     ))}

@@ -1,11 +1,12 @@
+
+
 import React, { useState, useMemo, useEffect } from 'react';
-import { ModelCriteria, Model, GarmentData } from '../types';
+import { ModelCriteria, Model, GarmentData, ProjectTemplate, User } from '../types';
 import { NATIONALITY_DEFAULTS_MAP, MALE_HAIR_STYLES, FEMALE_HAIR_STYLES } from '../constants';
 import { generateSingleModel, segmentGarment, generateModelCriteriaFromGarment } from '../services/geminiService';
 import { Button } from './shared/Button';
-import { DrapeLogo, FolderIcon, UserPlusIcon, SparklesIcon, CameraIcon } from './icons';
+import { FolderIcon, UserPlusIcon, MagicWandIcon, GridIcon } from './icons';
 import { useI18n } from '../i18n/i18n';
-import LanguageSwitcher from './LanguageSwitcher';
 import { fileToBase64 } from '../utils/fileUtils';
 import { Toast } from './shared/Toast';
 import { GeminiError } from '../services/geminiError';
@@ -14,16 +15,23 @@ import { CreationForm } from './model-creation/CreationForm';
 import { ResultsGrid } from './model-creation/ResultsGrid';
 import { SmartMatchResult } from './model-creation/SmartMatchResult';
 import { CollectionModal } from './modals/CollectionModal';
+import { TemplateViewer } from './model-creation/TemplateViewer';
+import { Header } from './Header';
 
 interface ModelCreationProps {
   onModelCreated: (model: Model, garmentData?: GarmentData) => void;
+  onTemplateSelected: (template: ProjectTemplate) => void;
+  currentUser: User | null;
+  onLogin: (user: User | null) => void;
 }
 
 const COLLECTION_KEY = 'virtualTryOnModelCollection';
+const TEMPLATES_KEY = 'virtualTryOnTemplates';
 
+type View = 'create' | 'smartMatch' | 'templates';
 type SmartMatchResultData = { model: Model, garmentData: GarmentData, criteria: ModelCriteria };
 
-const ModelCreation: React.FC<ModelCreationProps> = ({ onModelCreated }) => {
+const ModelCreation: React.FC<ModelCreationProps> = ({ onModelCreated, onTemplateSelected, currentUser, onLogin }) => {
   const { t } = useI18n();
   const [criteria, setCriteria] = useState<ModelCriteria>({
     nationality: 'American',
@@ -46,19 +54,24 @@ const ModelCreation: React.FC<ModelCreationProps> = ({ onModelCreated }) => {
   const [generatedModels, setGeneratedModels] = useState<(Model | 'error' | null)[]>([]);
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
   const [collection, setCollection] = useState<Model[]>([]);
+  const [templates, setTemplates] = useState<ProjectTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSmartMatching, setIsSmartMatching] = useState(false);
   const [smartMatchResult, setSmartMatchResult] = useState<SmartMatchResultData | null>(null);
+  const [smartMatchProgress, setSmartMatchProgress] = useState<{ text: string; percentage: number }>({ text: '', percentage: 0 });
   const [error, setError] = useState<string | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+  const [activeView, setActiveView] = useState<View>('create');
 
   useEffect(() => {
     try {
-        const saved = localStorage.getItem(COLLECTION_KEY);
-        if (saved) setCollection(JSON.parse(saved));
+        const savedCollection = localStorage.getItem(COLLECTION_KEY);
+        if (savedCollection) setCollection(JSON.parse(savedCollection));
+        const savedTemplates = localStorage.getItem(TEMPLATES_KEY);
+        if (savedTemplates) setTemplates(JSON.parse(savedTemplates));
     } catch (e) {
-        console.error("Failed to load model collection from localStorage", e);
+        console.error("Failed to load data from localStorage", e);
     }
   }, []);
 
@@ -179,14 +192,22 @@ const ModelCreation: React.FC<ModelCreationProps> = ({ onModelCreated }) => {
     setIsSmartMatching(true);
     setError(null);
     try {
+        setSmartMatchProgress({ text: t('modelCreation.smartMatch.progress.uploading'), percentage: 10 });
         const base64Original = await fileToBase64(file);
-        const [segmentedGarment, partialCriteria] = await Promise.all([
-            segmentGarment(base64Original, 'full outfit'),
-            generateModelCriteriaFromGarment(base64Original)
-        ]);
+
+        setSmartMatchProgress({ text: t('modelCreation.smartMatch.progress.segmenting'), percentage: 25 });
+        const segmentedGarment = await segmentGarment(base64Original, 'full outfit');
+        
+        setSmartMatchProgress({ text: t('modelCreation.smartMatch.progress.analyzing'), percentage: 50 });
+        const partialCriteria = await generateModelCriteriaFromGarment(base64Original);
+        
         const fullCriteria: ModelCriteria = { ...criteria, ...partialCriteria };
         setCriteria(fullCriteria);
+        
+        setSmartMatchProgress({ text: t('modelCreation.smartMatch.progress.generatingModel'), percentage: 75 });
         const model = await generateSingleModel(fullCriteria);
+
+        setSmartMatchProgress({ text: t('buttons.processing'), percentage: 100 });
         
         setSmartMatchResult({
           model,
@@ -203,112 +224,91 @@ const ModelCreation: React.FC<ModelCreationProps> = ({ onModelCreated }) => {
         }
     } finally {
         setIsSmartMatching(false);
+        setSmartMatchProgress({ text: '', percentage: 0 });
     }
   };
 
-  const HowItWorksStep: React.FC<{ icon: React.ReactNode; title: string; description: string }> = ({ icon, title, description }) => (
-    <div className="flex flex-col items-center text-center">
-      <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 text-blue-600 mb-4">
-        {icon}
-      </div>
-      <h3 className="font-bold text-lg mb-2">{title}</h3>
-      <p className="text-gray-500">{description}</p>
-    </div>
+  const TabButton: React.FC<{ view: View; icon: React.ReactNode; text: string; }> = ({ view, icon, text }) => (
+      <button
+          onClick={() => setActiveView(view)}
+          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 font-semibold rounded-t-lg border-b-2 transition-colors ${activeView === view ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
+      >
+          {icon}
+          <span>{text}</span>
+      </button>
   );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
       <Toast message={error || ''} onDismiss={() => setError(null)} />
-      <header className="p-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-            <DrapeLogo className="h-8 w-8" />
-            <span className="text-xl font-bold text-gray-800">VirtualTryOn</span>
-        </div>
-        <div className="flex items-center space-x-4">
-            <Button variant="secondary" onClick={() => setIsCollectionModalOpen(true)} className="!py-2 !px-4 rounded-full inline-flex items-center gap-2">
-              <FolderIcon className="w-5 h-5" />
-              <span className="hidden sm:inline">{t('buttons.myCollection')}</span>
-            </Button>
-            <LanguageSwitcher />
-        </div>
-      </header>
-
+      <Header 
+        currentUser={currentUser} 
+        onLogin={onLogin} 
+        actions={
+          <Button variant="secondary" onClick={() => setIsCollectionModalOpen(true)} className="!py-2 !px-4 rounded-full inline-flex items-center gap-2">
+            <FolderIcon className="w-5 h-5" />
+            <span className="hidden sm:inline">{t('buttons.myCollection')}</span>
+          </Button>
+        }
+      />
+      
       <main className="container mx-auto px-4 py-12 md:py-16">
-        <div className="text-center mb-16 md:mb-24">
+        <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4 leading-tight">{t('modelCreation.mainTitle')}</h1>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">{t('modelCreation.mainSubtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 items-start">
-          {/* Left Column: Create Model */}
-          <div className="space-y-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold mb-2">{t('modelCreation.create.title')}</h2>
-              <p className="text-gray-500">{t('modelCreation.create.subtitle')}</p>
+        <div className="max-w-5xl mx-auto">
+            <div className="flex border-b border-gray-200">
+                <TabButton view="create" icon={<UserPlusIcon className="w-5 h-5"/>} text={t('modelCreation.tabs.create')} />
+                <TabButton view="smartMatch" icon={<MagicWandIcon className="w-5 h-5"/>} text={t('modelCreation.tabs.smartMatch')} />
+                <TabButton view="templates" icon={<GridIcon className="w-5 h-5"/>} text={t('modelCreation.tabs.templates')} />
             </div>
-            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
-              <CreationForm criteria={criteria} onCriteriaChange={handleCriteriaChange} />
-              <Button onClick={handleGenerate} disabled={isLoading || !isFormValid} className="w-full md:w-auto mt-8 px-12 py-3 text-lg">
-                {isLoading ? t('buttons.generating') : t('buttons.generate')}
-              </Button>
+
+            <div className="bg-white p-6 md:p-8 rounded-b-2xl shadow-lg border border-gray-200 border-t-0">
+                {activeView === 'create' && (
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 items-start">
+                        <div>
+                           <CreationForm criteria={criteria} onCriteriaChange={handleCriteriaChange} />
+                            <Button onClick={handleGenerate} disabled={isLoading || !isFormValid} className="w-full md:w-auto mt-8 px-12 py-3 text-lg">
+                                {isLoading ? t('buttons.generating') : t('buttons.generate')}
+                            </Button>
+                        </div>
+                        {showResults && (
+                            <ResultsGrid 
+                                generatedModels={generatedModels}
+                                selectedModel={selectedModel}
+                                isModelInCollection={isModelInCollection}
+                                onSelectModel={setSelectedModel}
+                                onToggleCollect={handleToggleCollect}
+                            />
+                        )}
+                    </div>
+                )}
+
+                {activeView === 'smartMatch' && (
+                    smartMatchResult ? (
+                        <SmartMatchResult
+                            result={smartMatchResult}
+                            onConfirm={() => onModelCreated(smartMatchResult.model, smartMatchResult.garmentData)}
+                            onGoBack={() => setSmartMatchResult(null)}
+                        />
+                    ) : (
+                        <SmartMatch onFileSelect={handleSmartMatchFile} isProcessing={isSmartMatching} progress={smartMatchProgress} />
+                    )
+                )}
+
+                {activeView === 'templates' && (
+                    <TemplateViewer templates={templates} onSelectTemplate={onTemplateSelected} />
+                )}
             </div>
-            {showResults && (
-              <ResultsGrid 
-                generatedModels={generatedModels}
-                selectedModel={selectedModel}
-                isModelInCollection={isModelInCollection}
-                onSelectModel={setSelectedModel}
-                onToggleCollect={handleToggleCollect}
-              />
-            )}
-          </div>
-          
-          {/* Right Column: Smart Match */}
-          <div className="space-y-8">
-            <div className="text-center">
-                <h2 className="text-3xl font-bold mb-2">{t('modelCreation.smartMatch.mainTitle')}</h2>
-                <p className="text-gray-500">{t('modelCreation.smartMatch.mainSubtitle')}</p>
-            </div>
-            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
-              {smartMatchResult ? (
-                <SmartMatchResult
-                  result={smartMatchResult}
-                  onConfirm={() => onModelCreated(smartMatchResult.model, smartMatchResult.garmentData)}
-                  onGoBack={() => setSmartMatchResult(null)}
-                />
-              ) : (
-                <SmartMatch onFileSelect={handleSmartMatchFile} isProcessing={isSmartMatching} />
-              )}
-            </div>
-          </div>
         </div>
         
-        {selectedModel && !smartMatchResult && (
+        {selectedModel && activeView === 'create' && (
           <div className="mt-12 flex justify-center">
               <Button onClick={handleNext} className="text-lg px-12 py-3">{t('buttons.next')}</Button>
           </div>
         )}
-        
-        <section className="text-center mt-24 md:mt-32">
-            <h2 className="text-3xl font-bold mb-10">{t('modelCreation.howItWorks.title')}</h2>
-            <div className="grid md:grid-cols-3 gap-10 max-w-5xl mx-auto">
-                <HowItWorksStep 
-                  icon={<UserPlusIcon className="w-8 h-8"/>}
-                  title={t('modelCreation.howItWorks.step1.title')}
-                  description={t('modelCreation.howItWorks.step1.description')}
-                />
-                 <HowItWorksStep 
-                  icon={<SparklesIcon className="w-8 h-8"/>}
-                  title={t('modelCreation.howItWorks.step2.title')}
-                  description={t('modelCreation.howItWorks.step2.description')}
-                />
-                 <HowItWorksStep 
-                  icon={<CameraIcon className="w-8 h-8"/>}
-                  title={t('modelCreation.howItWorks.step3.title')}
-                  description={t('modelCreation.howItWorks.step3.description')}
-                />
-            </div>
-        </section>
       </main>
 
       <CollectionModal

@@ -1,3 +1,4 @@
+
 {
   "nav": {
     "home": "首页",
@@ -16,6 +17,7 @@
     "browse": "浏览文件",
     "replaceGarment": "替换服装",
     "download": "下载",
+    "export": "导出",
     "downloadSelected": "下载所选",
     "refineAI": "AI 优化",
     "refineManual": "编辑",
@@ -30,6 +32,7 @@
     "swapModel": "更换模特",
     "changeBackground": "更换背景",
     "batchGenerate": "批量生成",
+    "composeScene": "场景合成",
     "random": "随机",
     "custom": "自定义",
     "close": "关闭",
@@ -41,7 +44,15 @@
     "comingSoon": "即将推出",
     "upscaling": "高清处理中...",
     "regeneratePose": "重新生成姿势",
-    "refineModel": "微调模特"
+    "refineModel": "微调模特",
+    "saveAsTemplate": "存为模板",
+    "login": "登录 / 注册",
+    "loginGuest": "以访客身份登录",
+    "logout": "退出登录",
+    "share": "分享",
+    "copyLink": "复制链接",
+    "copied": "已复制！",
+    "addComment": "发表评论"
   },
   "modelCreation": {
     "title": "创建您的虚拟模特",
@@ -73,7 +84,13 @@
       "title": "智能匹配",
       "subtitle": "已有服装图片？上传它，我们将立即为您生成最匹配的模特。",
       "loading": "正在分析风格并创建模特...",
-      "cta": "拖放或点击上传"
+      "cta": "拖放或点击上传",
+      "progress": {
+        "uploading": "读取文件中...",
+        "segmenting": "分割服装中...",
+        "analyzing": "分析风格中...",
+        "generatingModel": "生成模特中..."
+      }
     },
     "primaryFeatures": "主要特征",
     "bodyDetails": "身体细节",
@@ -87,7 +104,17 @@
       "subtitle": "选择一个已保存的模特开始新的会话。",
       "empty": "您的收藏是空的。生成并收藏一些模特吧！"
     },
-    "or": "或"
+    "or": "或",
+    "tabs": {
+        "create": "自定义创建",
+        "smartMatch": "智能匹配",
+        "templates": "模板"
+    },
+    "templates": {
+        "title": "从模板开始",
+        "subtitle": "选择一个已保存的模板来快速设置您的场景。",
+        "empty": "您没有已保存的模板。请在工作区中创建一些！"
+    }
   },
   "smartMatchResult": {
     "title": "智能匹配结果",
@@ -120,12 +147,15 @@
     "sidebar": {
         "workspace": "工作区",
         "myProjects": "我的项目",
-        "saveProject": "保存项目"
+        "sceneEditor": "场景编辑器",
+        "saveProject": "保存项目",
+        "saveTemplate": "保存为模板"
     },
     "loading": {
         "generatingPose": "正在生成姿势...",
         "resegmenting": "正在重新分割...",
-        "applyingGarment": "正在应用服装..."
+        "applyingGarment": "正在应用服装...",
+        "loadingTemplate": "正在加载模板..."
     },
     "selectPose": "选择姿势",
     "posedModel": "模特预览",
@@ -158,6 +188,19 @@
     "fabricType": "面料类型",
     "bottomsLibrary": "搭配下装"
   },
+  "sceneEditor": {
+    "title": "场景编辑器",
+    "addModel": "从项目添加模特",
+    "generate": "生成场景",
+    "generating": "场景合成中...",
+    "layers": "图层",
+    "noProjects": "您没有已保存的、包含最终图像的项目。请先创建并保存一些项目。",
+    "noLayers": "从您的项目中添加模特，开始构建场景。",
+    "segmenting": "分割中...",
+    "segmentationFailed": "分割失败",
+    "resultTitle": "生成的场景",
+    "backToEditor": "返回编辑器"
+  },
   "addGarmentModal": {
     "title": "添加新服装",
     "uploadStep": "1. 上传图片",
@@ -181,7 +224,9 @@
     "safetyBlock": "生成失败，请尝试调整您的描述或设置。",
     "inpaintFailed": "局部修复失败，请重试。",
     "upscaleFailed": "高清化处理失败，请重试。",
-    "refineModelFailed": "模特微调失败，请重试。"
+    "refineModelFailed": "模特微调失败，请重试。",
+    "segmentPersonFailed": "从图像中分割人物失败。",
+    "harmonizeSceneFailed": "场景合成失败，请重试。"
   },
   "swapModelModal": {
     "title": "更换模特",
@@ -228,14 +273,35 @@
     "empty": "您没有已保存的项目。",
     "load": "加载",
     "delete": "删除",
+    "add": "添加",
     "namePrompt": "为您的项目输入一个名称：",
-    "defaultProjectName": "项目"
+    "defaultProjectName": "项目",
+    "shareTitle": "分享项目",
+    "shareDescription": "任何拥有此链接的人都可以查看和评论该项目。",
+    "shareLinkCopied": "分享链接已复制到剪贴板！"
+  },
+  "myTemplatesModal": {
+    "namePrompt": "为您的模板输入一个名称：",
+    "defaultTemplateName": "模板"
+  },
+  "exportModal": {
+    "title": "裁剪并导出",
+    "export": "导出"
+  },
+  "shareView": {
+    "title": "项目预览",
+    "notFound": "项目未找到或已被删除。",
+    "commentsTitle": "评论区",
+    "commentPlaceholder": "发表一条评论...",
+    "noComments": "暂无评论。"
   },
   "toasts": {
-    "projectSaved": "项目已成功保存！",
+    "projectSaved": "项目已保存并同步至云端！",
     "projectLoaded": "项目已加载。",
     "projectDeleted": "项目已删除。",
-    "modelRefined": "模特已更新。选择姿势时将重新生成。"
+    "modelRefined": "模特已更新。选择姿势时将重新生成。",
+    "templateSaved": "模板已成功保存！",
+    "autoLogin": "已以来宾身份登录以保存您的项目。"
   },
   "onboarding": {
     "welcomeTitle": "欢迎来到工作区！",
@@ -261,6 +327,11 @@
     "beach_sunset": "海滩日落",
     "modern_loft": "现代阁楼",
     "forest_path": "森林小径"
+  },
+  "exportPresets": {
+    "instagram_story": "Instagram快拍 (9:16)",
+    "taobao_main": "电商主图 (1:1)",
+    "facebook_post": "社交媒体帖子 (1.91:1)"
   },
   "nationalities": {
     "american": "美国",

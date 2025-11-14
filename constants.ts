@@ -1,5 +1,5 @@
 
-import { Pose, Bottom } from './types';
+import { Pose, Bottom, ExportPreset } from './types';
 import { POSE_ICONS } from './poseIcons';
 
 export const NATIONALITIES: string[] = [
@@ -155,4 +155,11 @@ export const BOTTOM_PRESETS: Bottom[] = [
         thumbnail: "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIGZpbGw9Im5vbmUiPgogICAgICAgIDxyZWN0IGZpbGw9IiNGRkZGRkYiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48L3JlY3Q+CiAgICAgICAgPHBhdGggZD0iTSAzMCw1MCBMIDI1LDEwIEggNTUgTCA0NSw1MCBaIiBmaWxsPSIjZjhmYWZjIj48L3BhdGg+CiAgICAgICAgPHBhdGggZD0iTSA3MCw1MCBMIDc1LDEwIEggNDUgTCA1NSw1MCBaIiBmaWxsPSIjZjhmYWZjIj48L3BhdGg+CiAgICAgICAgPHBhdGggZD0iTSA0NSwxMCBIIDU1IEwgNTAsMjAgWiIgZmlsbD0iI2YxZjVmOSI+PC9wYXRoPgogICAgPC9nPgo8L3N2Zz4=",
         segmented: "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIGZpbGw9Im5vbmUiPgogICAgICAgIDxwYXRoIGQ9Ik0gMzAsNTIgTCAyNSwxMiBIIDU1IEwgNDUsNTIgWiIgZmlsbD0iI2Y4ZmFmYyI+PC9wYXRoPgogICAgICAgIDxwYXRoIGQ9Ik0gNzAsNTIgTCA3NSwxMiBIIDQ1IEwgNTUsNTIgWiIgZmlsbD0iI2Y4ZmFmYyI+PC9wYXRoPgogICAgICAgIDxwYXRoIGQ9Ik0gNDUsMTIgSCA1NSBMIDUwLDIyIFoiIGZpbGw9IiNmMWY1ZjkiPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+",
     }
+];
+
+
+export const EXPORT_PRESETS: ExportPreset[] = [
+    { name: "instagram_story", width: 1080, height: 1920 },
+    { name: "taobao_main", width: 800, height: 800 },
+    { name: "facebook_post", width: 1200, height: 630 },
 ];

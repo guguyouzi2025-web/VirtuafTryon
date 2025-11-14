@@ -1,11 +1,12 @@
+
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Model, Pose, GarmentType, GarmentData, SavedProject, WorkspaceState as IWorkspaceState, Garment } from '../types';
+import { Model, Pose, GarmentType, GarmentData, SavedProject, WorkspaceState as IWorkspaceState, Garment, ProjectTemplate, User } from '../types';
 import { POSES } from '../constants';
 import { generateModelPose, performVirtualTryOn, performCombinedVirtualTryOn, upscaleImage } from '../services/geminiService';
 import { Button } from './shared/Button';
-import { DrapeLogo, MenuIcon, XIcon } from './icons';
+import { MenuIcon, XIcon, UsersIcon } from './icons';
 import { useI18n } from '../i18n/i18n';
-import LanguageSwitcher from './LanguageSwitcher';
 import { SwapModelModal } from './modals/SwapModelModal';
 import { ChangeBackgroundModal } from './modals/ChangeBackgroundModal';
 import { Toast } from './shared/Toast';
@@ -21,17 +22,25 @@ import { InpaintingModal } from './modals/InpaintingModal';
 import { AddGarmentModal } from './modals/AddGarmentModal';
 import { OnboardingGuide } from './workspace/OnboardingGuide';
 import { RefineModelModal } from './modals/RefineModelModal';
+import { SceneEditor } from './scene-editor/SceneEditor';
+import { Header } from './Header';
+import { ShareModal } from './modals/ShareModal';
 
 interface WorkspaceProps {
   initialModel: Model;
   initialGarmentData?: GarmentData | null;
+  initialTemplate?: ProjectTemplate | null;
   onGoBack: () => void;
+  currentUser: User | null;
+  onLogin: (user: User | null) => void;
 }
 
 const GARMENT_LIBRARY_KEY = 'virtualTryOnGarmentLibrary';
 const ONBOARDING_KEY = 'virtualTryOnOnboardingComplete';
 
-const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData, onGoBack }) => {
+type View = 'workspace' | 'projects' | 'scene';
+
+const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData, initialTemplate, onGoBack, currentUser, onLogin }) => {
   const { t } = useI18n();
   const { getCachedPose, setCachedPose } = usePoseCache();
   
@@ -43,10 +52,11 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
     garmentType: 'full outfit',
     fabricType: 'None',
     finalImage: null,
+    backgroundPrompt: null,
   };
 
   const { state, set, updatePresent, undo, redo, canUndo, canRedo, reset } = useHistory(initialState);
-  const { selectedPose, posedImages, garment, originalGarment, garmentType, fabricType, finalImage } = state;
+  const { selectedPose, posedImages, garment, originalGarment, garmentType, fabricType, finalImage, backgroundPrompt } = state;
   const [model, setModel] = useState(initialModel);
   const modelWithPose = selectedPose ? posedImages[selectedPose.name] || null : model.image;
   
@@ -65,8 +75,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
   const [isInpaintingModalOpen, setIsInpaintingModalOpen] = useState(false);
   const [isRefineModelModalOpen, setIsRefineModelModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [projectToShare, setProjectToShare] = useState<SavedProject | null>(null);
 
-  const [currentView, setCurrentView] = useState<'workspace' | 'projects'>('workspace');
+  const [currentView, setCurrentView] = useState<View>('workspace');
 
   // Onboarding state and refs
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -212,8 +224,23 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
             finalImage: null,
         }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialGarmentData, set]);
+
+  useEffect(() => {
+    if (initialTemplate) {
+      const pose = POSES.find(p => p.name === initialTemplate.poseName);
+      if (pose) {
+        set(currentState => ({
+          ...currentState,
+          selectedPose: pose,
+          backgroundPrompt: initialTemplate.backgroundPrompt,
+          garment: null,
+          originalGarment: null,
+          finalImage: null,
+        }));
+      }
+    }
+  }, [initialTemplate, set]);
 
   useEffect(() => {
     if (autoApplyAfterPose && modelWithPose && !isLoadingTryOn && garment) {
@@ -320,6 +347,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
 
   const handleSaveProject = useCallback(() => {
     if (!finalImage) return;
+    if (!currentUser) {
+      onLogin({ id: 'guest', name: 'Guest' }); // Auto-login guest if not logged in
+      setNotification({ text: t('toasts.autoLogin'), type: 'success' });
+    }
     const name = prompt(t('myProjectsModal.namePrompt'), `${t('myProjectsModal.defaultProjectName')} ${new Date().toLocaleString()}`);
     if (!name) return;
 
@@ -329,6 +360,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
       thumbnail: finalImage,
       initialModel: model,
       workspaceState: state,
+      comments: [],
     };
 
     const saved = localStorage.getItem('virtualTryOnProjects');
@@ -336,7 +368,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
     projects.unshift(newProject);
     localStorage.setItem('virtualTryOnProjects', JSON.stringify(projects));
     setNotification({ text: t('toasts.projectSaved'), type: 'success' });
-  }, [finalImage, model, state, t]);
+  }, [finalImage, model, state, t, currentUser, onLogin]);
   
   const handleLoadProjectAndSwitchView = useCallback((project: SavedProject) => {
     setModel(project.initialModel);
@@ -357,6 +389,15 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
     setNotification({ text: t('toasts.modelRefined'), type: 'success' });
     setIsRefineModelModalOpen(false);
   }, [set, t]);
+
+  const handleShareProject = useCallback((project: SavedProject) => {
+    if (!currentUser) {
+      onLogin({ id: 'guest', name: 'Guest' });
+      setNotification({ text: t('toasts.autoLogin'), type: 'success' });
+    }
+    setProjectToShare(project);
+    setIsShareModalOpen(true);
+  }, [currentUser, onLogin, t]);
    
   const isCurrentPoseLoading = selectedPose ? isLoadingPoses.has(selectedPose.name) : false;
 
@@ -372,10 +413,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
   };
   
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <Toast message={notification?.text || ''} type={notification?.type} onDismiss={() => setNotification(null)} />
       
-      {showOnboarding && (
+      {showOnboarding && currentView === 'workspace' && (
         <OnboardingGuide 
           onComplete={handleOnboardingComplete}
           targets={{
@@ -394,131 +435,135 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
         onError={(text) => handleError(null, text)}
       />
 
-      <aside className="w-64 bg-white p-6 flex-col justify-between border-r border-gray-200 hidden lg:flex">
-        <div>
-          <div className="flex items-center justify-between mb-10">
-            <div className="flex items-center space-x-3">
-              <DrapeLogo className="h-10 w-10"/>
-              <div>
-                  <h2 className="font-bold text-lg">Drape Inc.</h2>
-                  <p className="text-sm text-gray-500">{t('workspace.title')}</p>
+      <div className="flex flex-1 min-h-0">
+        <aside className="w-64 bg-white p-6 flex-col justify-between border-r border-gray-200 hidden lg:flex">
+            <div>
+              <div className="flex items-center justify-between mb-10">
+                  <h2 className="font-bold text-lg">{t('workspace.title')}</h2>
               </div>
+              <nav className="space-y-2">
+                  <NavButton onClick={() => setCurrentView('workspace')} isActive={currentView === 'workspace'}>
+                      <span>{t('workspace.sidebar.workspace')}</span>
+                  </NavButton>
+                  <NavButton onClick={() => setCurrentView('projects')} isActive={currentView === 'projects'}>
+                      <span>{t('workspace.sidebar.myProjects')}</span>
+                  </NavButton>
+                  <NavButton onClick={() => setCurrentView('scene')} isActive={currentView === 'scene'}>
+                      <UsersIcon className="w-5 h-5" />
+                      <span>{t('workspace.sidebar.sceneEditor')}</span>
+                  </NavButton>
+              </nav>
             </div>
-            <LanguageSwitcher />
-          </div>
-          <nav className="space-y-2">
-              <button onClick={onGoBack} className="w-full flex items-center space-x-3 text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-100">
-                  <span>{t('nav.home')}</span>
-              </button>
-              <NavButton onClick={() => setCurrentView('workspace')} isActive={currentView === 'workspace'}>
-                  <span>{t('workspace.sidebar.workspace')}</span>
-              </NavButton>
-              <NavButton onClick={() => setCurrentView('projects')} isActive={currentView === 'projects'}>
-                  <span>{t('workspace.sidebar.myProjects')}</span>
-              </NavButton>
-          </nav>
-        </div>
-        <div>
-            <Button variant="secondary" onClick={onGoBack} className="w-full">{t('buttons.backToModels')}</Button>
-        </div>
-      </aside>
-      
-      <main className="flex-1 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <header className="lg:hidden flex justify-between items-center p-4 bg-white shadow-sm sticky top-0 z-20 col-span-full">
-          <div className="flex items-center space-x-2">
-            <DrapeLogo className="h-8 w-8"/>
-            <h2 className="font-bold text-lg">Drape Inc.</h2>
-          </div>
-          <div className="flex items-center space-x-4">
-            <LanguageSwitcher />
-            <button onClick={() => setIsMobileMenuOpen(true)} aria-label="Open menu">
-              <MenuIcon className="h-6 w-6"/>
-            </button>
-          </div>
-        </header>
-
-        {isMobileMenuOpen && (
-            <div role="dialog" aria-modal="true" className="fixed inset-0 bg-black/60 z-50 lg:hidden" onClick={() => setIsMobileMenuOpen(false)}>
-                <div className="absolute inset-y-0 left-0 w-64 bg-white p-6 animate-fadeInRight" onClick={e => e.stopPropagation()}>
-                    <div className="flex justify-between items-center mb-10">
-                        <h2 className="font-bold text-lg">Menu</h2>
-                        <button onClick={() => setIsMobileMenuOpen(false)} aria-label="Close menu">
-                            <XIcon className="h-6 w-6" />
-                        </button>
-                    </div>
-                    <nav className="space-y-2">
-                        <button onClick={() => { onGoBack(); setIsMobileMenuOpen(false); }} className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100">{t('buttons.backToModels')}</button>
-                        <NavButton onClick={() => { setCurrentView('workspace'); setIsMobileMenuOpen(false); }} isActive={currentView === 'workspace'}>
-                            <span>{t('workspace.sidebar.workspace')}</span>
-                        </NavButton>
-                        <NavButton onClick={() => { setCurrentView('projects'); setIsMobileMenuOpen(false); }} isActive={currentView === 'projects'}>
-                            <span>{t('workspace.sidebar.myProjects')}</span>
-                        </NavButton>
-                    </nav>
-                </div>
+            <div>
+                <Button variant="secondary" onClick={onGoBack} className="w-full">{t('buttons.backToModels')}</Button>
             </div>
-        )}
+        </aside>
         
-        {currentView === 'workspace' ? (
-          <>
-            <div ref={poseSelectorRef} className="lg:col-span-2">
-                <PoseSelector poses={POSES} selectedPose={selectedPose} loadingPoses={isLoadingPoses} onPoseSelect={handlePoseSelect} onRegenerate={handleRegeneratePose} />
-            </div>
+        <div className="flex-1 flex flex-col">
+          <Header currentUser={currentUser} onLogin={onLogin} onGoHome={onGoBack} onToggleMobileMenu={() => setIsMobileMenuOpen(true)} />
+          <main className="flex-1 p-0 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start overflow-y-auto">
+            {isMobileMenuOpen && (
+                <div role="dialog" aria-modal="true" className="fixed inset-0 bg-black/60 z-50 lg:hidden" onClick={() => setIsMobileMenuOpen(false)}>
+                    <div className="absolute inset-y-0 left-0 w-64 bg-white p-6 animate-fadeInRight" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-center mb-10">
+                            <h2 className="font-bold text-lg">Menu</h2>
+                            <button onClick={() => setIsMobileMenuOpen(false)} aria-label="Close menu">
+                                <XIcon className="h-6 w-6" />
+                            </button>
+                        </div>
+                        <nav className="space-y-2">
+                            <button onClick={() => { onGoBack(); setIsMobileMenuOpen(false); }} className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100">{t('buttons.backToModels')}</button>
+                            <NavButton onClick={() => { setCurrentView('workspace'); setIsMobileMenuOpen(false); }} isActive={currentView === 'workspace'}>
+                                <span>{t('workspace.sidebar.workspace')}</span>
+                            </NavButton>
+                            <NavButton onClick={() => { setCurrentView('projects'); setIsMobileMenuOpen(false); }} isActive={currentView === 'projects'}>
+                                <span>{t('workspace.sidebar.myProjects')}</span>
+                            </NavButton>
+                            <NavButton onClick={() => { setCurrentView('scene'); setIsMobileMenuOpen(false); }} isActive={currentView === 'scene'}>
+                              <UsersIcon className="w-5 h-5" />
+                              <span>{t('workspace.sidebar.sceneEditor')}</span>
+                            </NavButton>
+                        </nav>
+                    </div>
+                </div>
+            )}
             
-            <div className="lg:col-span-7">
-                <MainViewer
-                    posedOrInitialImage={modelWithPose || model.image}
-                    finalImage={finalImage}
-                    isCurrentPoseLoading={isCurrentPoseLoading}
-                    isLoadingTryOn={isLoadingTryOn}
-                    isGarmentReady={!!garment}
-                    onRefineModel={useCallback(() => setIsRefineModelModalOpen(true), [])}
-                />
-            </div>
+            {currentView === 'workspace' && (
+              <>
+                <div ref={poseSelectorRef} className="lg:col-span-2">
+                    <PoseSelector poses={POSES} selectedPose={selectedPose} loadingPoses={isLoadingPoses} onPoseSelect={handlePoseSelect} onRegenerate={handleRegeneratePose} />
+                </div>
+                
+                <div className="lg:col-span-7">
+                    <MainViewer
+                        posedOrInitialImage={modelWithPose || model.image}
+                        finalImage={finalImage}
+                        isCurrentPoseLoading={isCurrentPoseLoading}
+                        isLoadingTryOn={isLoadingTryOn}
+                        isGarmentReady={!!garment}
+                        onRefineModel={useCallback(() => setIsRefineModelModalOpen(true), [])}
+                    />
+                </div>
 
-            <div className="lg:col-span-3">
-                <GarmentControls 
-                    addGarmentRef={addGarmentRef}
-                    applyButtonRef={applyButtonRef}
-                    downloadButtonRef={downloadButtonRef}
-                    garmentLibrary={garmentLibrary}
-                    selectedGarmentOriginal={originalGarment}
-                    fabricType={fabricType}
-                    finalImage={finalImage}
-                    isLoadingTryOn={isLoadingTryOn}
-                    isUpscaling={isUpscaling}
-                    canUndo={canUndo}
-                    canRedo={canRedo}
-                    isApplyDisabled={!modelWithPose || !garment || isLoadingTryOn || isCurrentPoseLoading}
-                    onAddNew={() => setIsAddGarmentModalOpen(true)}
-                    onSelect={handleSelectGarmentFromLibrary}
-                    onDelete={handleDeleteGarmentFromLibrary}
-                    onFabricChange={useCallback((newFabric: string) => {
-                        if (newFabric === fabricType) return;
-                        set(cs => ({ ...cs, fabricType: newFabric, finalImage: null }));
-                    }, [fabricType, set])}
-                    onApply={handleApplyGarment}
-                    onApplyBottom={handleApplyBottom}
-                    onUndo={undo}
-                    onRedo={redo}
-                    onSwapModel={useCallback(() => setIsSwapModalOpen(true), [])}
-                    onChangeBackground={useCallback(() => setIsBgModalOpen(true), [])}
-                    onMagicFix={useCallback(() => setIsInpaintingModalOpen(true), [])}
-                    onBatchGenerate={useCallback(() => setIsBatchModalOpen(true), [])}
-                    onSaveProject={handleSaveProject}
-                    onDownload={handleDownload}
+                <div className="lg:col-span-3">
+                    <GarmentControls 
+                        addGarmentRef={addGarmentRef}
+                        applyButtonRef={applyButtonRef}
+                        downloadButtonRef={downloadButtonRef}
+                        garmentLibrary={garmentLibrary}
+                        selectedGarmentOriginal={originalGarment}
+                        fabricType={fabricType}
+                        finalImage={finalImage}
+                        isLoadingTryOn={isLoadingTryOn}
+                        isUpscaling={isUpscaling}
+                        canUndo={canUndo}
+                        canRedo={canRedo}
+                        isApplyDisabled={!modelWithPose || !garment || isLoadingTryOn || isCurrentPoseLoading}
+                        onAddNew={() => setIsAddGarmentModalOpen(true)}
+                        onSelect={handleSelectGarmentFromLibrary}
+                        onDelete={handleDeleteGarmentFromLibrary}
+                        onFabricChange={useCallback((newFabric: string) => {
+                            if (newFabric === fabricType) return;
+                            set(cs => ({ ...cs, fabricType: newFabric, finalImage: null }));
+                        }, [fabricType, set])}
+                        onApply={handleApplyGarment}
+                        onApplyBottom={handleApplyBottom}
+                        onUndo={undo}
+                        onRedo={redo}
+                        onSwapModel={useCallback(() => setIsSwapModalOpen(true), [])}
+                        onChangeBackground={useCallback(() => setIsBgModalOpen(true), [])}
+                        onMagicFix={useCallback(() => setIsInpaintingModalOpen(true), [])}
+                        onBatchGenerate={useCallback(() => setIsBatchModalOpen(true), [])}
+                        onSaveProject={handleSaveProject}
+                        onDownload={handleDownload}
+                    />
+                </div>
+              </>
+            )}
+            {currentView === 'projects' && (
+              <div className="col-span-full lg:col-span-12">
+                <MyProjectsView
+                  onLoadProject={handleLoadProjectAndSwitchView}
+                  onShareProject={handleShareProject}
+                  onNotify={(text, type) => setNotification({ text, type })}
                 />
-            </div>
-          </>
-        ) : (
-          <div className="col-span-full lg:col-span-12">
-            <MyProjectsView
-              onLoadProject={handleLoadProjectAndSwitchView}
-              onNotify={(text, type) => setNotification({ text, type })}
-            />
-          </div>
-        )}
-      </main>
+              </div>
+            )}
+            {currentView === 'scene' && (
+                <div className="col-span-full lg:col-span-12">
+                    <SceneEditor onNotify={(text, type) => setNotification({ text, type })} />
+                </div>
+            )}
+          </main>
+        </div>
+      </div>
+      
+      <ShareModal 
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        project={projectToShare}
+        onNotify={(text, type) => setNotification({ text, type })}
+      />
 
       <SwapModelModal 
         isOpen={isSwapModalOpen}
@@ -533,7 +578,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ initialModel, initialGarmentData,
         isOpen={isBgModalOpen}
         onClose={() => setIsBgModalOpen(false)}
         finalImage={finalImage}
-        onUpdateImage={(newImage) => set(s => ({ ...s, finalImage: newImage }))}
+        onSave={(newImage, prompt) => set(s => ({ ...s, finalImage: newImage, backgroundPrompt: prompt }))}
         onError={(text) => handleError(null, text)}
       />
 

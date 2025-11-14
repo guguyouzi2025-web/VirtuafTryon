@@ -9,21 +9,21 @@ interface ChangeBackgroundModalProps {
   finalImage: string | null;
   isOpen: boolean;
   onClose: () => void;
-  onUpdateImage: (newImage: string) => void;
+  onSave: (newImage: string, prompt: string) => void;
   onError: (errorMessage: string) => void;
 }
 
-export const ChangeBackgroundModal: React.FC<ChangeBackgroundModalProps> = ({ finalImage, isOpen, onClose, onUpdateImage, onError }) => {
+export const ChangeBackgroundModal: React.FC<ChangeBackgroundModalProps> = ({ finalImage, isOpen, onClose, onSave, onError }) => {
   const { t } = useI18n();
   const [isChangingBg, setIsChangingBg] = useState(false);
 
   const handleChangeBackground = async (prompt: string) => {
-      if (!finalImage) return;
+      if (!finalImage || !prompt) return;
       setIsChangingBg(true);
       onError('');
       try {
           const result = await changeBackground(finalImage, prompt);
-          onUpdateImage(result);
+          onSave(result, prompt);
           onClose();
       } catch (err) {
           console.error(err);

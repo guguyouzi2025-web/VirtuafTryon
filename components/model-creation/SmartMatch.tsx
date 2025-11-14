@@ -7,9 +7,10 @@ import { useI18n } from '../../i18n/i18n';
 interface SmartMatchProps {
   onFileSelect: (file: File) => void;
   isProcessing: boolean;
+  progress?: { text: string; percentage: number };
 }
 
-export const SmartMatch: React.FC<SmartMatchProps> = ({ onFileSelect, isProcessing }) => {
+export const SmartMatch: React.FC<SmartMatchProps> = ({ onFileSelect, isProcessing, progress }) => {
   const { t } = useI18n();
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -59,9 +60,15 @@ export const SmartMatch: React.FC<SmartMatchProps> = ({ onFileSelect, isProcessi
       >
           <input type="file" accept="image/png, image/jpeg" ref={fileInputRef} onChange={handleFileChange} className="hidden" disabled={isProcessing} />
           {isProcessing ? (
-              <div className="flex flex-col items-center justify-center h-24">
+              <div className="flex flex-col items-center justify-center h-32">
                   <Spinner />
-                  <p className="mt-4 font-semibold text-blue-600">{t('modelCreation.smartMatch.loading')}</p>
+                  <p className="mt-4 font-semibold text-blue-600">{progress?.text || t('modelCreation.smartMatch.loading')}</p>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 mt-4">
+                      <div 
+                          className="bg-blue-600 h-2.5 rounded-full transition-all duration-500 ease-out" 
+                          style={{ width: `${progress?.percentage || 0}%` }}
+                      ></div>
+                  </div>
               </div>
           ) : (
               <>

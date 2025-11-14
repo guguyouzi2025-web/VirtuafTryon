@@ -1,4 +1,3 @@
-
 import { ModelCriteria, GarmentType } from './types';
 
 const getBuildDescription = (build: string): string => {
@@ -350,3 +349,22 @@ Upscale the provided image to ${scale}x its original resolution.
 4.  **Output High Resolution:** The final output must be a high-resolution, sharp, and photorealistic photograph.
 `;
 }
+
+export const getPersonSegmentationPrompt = (): string => {
+  return `Your task is to segment the main person from the provided photograph.
+The result must be ONLY the complete person, including all clothing and hair, on a transparent background.
+Remove the background entirely and reconstruct any hidden parts of the person.
+Preserve all original details like fabric texture, color, and lighting.`;
+};
+
+export const getSceneHarmonizationPrompt = (): string => {
+  return `
+**Task: Scene Harmonization**
+You are provided with a composite image containing multiple people placed on a background. This image is a rough draft. Your task is to transform it into a single, cohesive, photorealistic photograph.
+
+**CRUCIAL, NON-NEGOTIABLE, STRICTLY ENFORCED RULES:**
+1.  **Do Not Change the Composition:** The positions, poses, clothing, and identities of the people MUST remain exactly as they are in the input image. Do not move, resize, or alter them.
+2.  **Unify Lighting and Shadows (HIGHEST PRIORITY):** Meticulously analyze the lighting of the background environment and adjust the lighting on every person to match it perfectly. Cast realistic shadows from each person onto the ground and onto other people where they would naturally occlude light.
+3.  **Seamless Integration:** Blend the edges of each person into the scene. Eliminate any harsh lines or artifacts from the original composite.
+4.  **Handle Occlusion:** Where people overlap, ensure the intersection looks natural and physically correct.`;
+};

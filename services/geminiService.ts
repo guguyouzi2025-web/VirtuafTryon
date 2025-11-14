@@ -1,6 +1,5 @@
-
 import { GoogleGenAI, Modality, GenerateContentResponse, Type } from "@google/genai";
-import { getModelGenerationPrompt, getPoseGenerationPrompt, getVirtualTryOnPrompt, getGarmentSegmentationPrompt, getGarmentRefinementPrompt, getModelCriteriaFromGarmentPrompt, getSwapModelPrompt, getChangeBackgroundPrompt, getInpaintingPrompt, getUpscalingPrompt, getCombinedVirtualTryOnPrompt } from '../prompts';
+import { getModelGenerationPrompt, getPoseGenerationPrompt, getVirtualTryOnPrompt, getGarmentSegmentationPrompt, getGarmentRefinementPrompt, getModelCriteriaFromGarmentPrompt, getSwapModelPrompt, getChangeBackgroundPrompt, getInpaintingPrompt, getUpscalingPrompt, getCombinedVirtualTryOnPrompt, getPersonSegmentationPrompt, getSceneHarmonizationPrompt } from '../prompts';
 import { ModelCriteria, GarmentType } from "../types";
 import { GeminiError } from "./geminiError";
 
@@ -291,4 +290,14 @@ export const inpaintImage = async (baseImage: string, maskImage: string, userPro
 export const upscaleImage = async (baseImage: string, scale: number = 2): Promise<string> => {
     const prompt = getUpscalingPrompt(scale);
     return generateImageFromPrompt(prompt, baseImage);
+};
+
+export const segmentPerson = async (image: string): Promise<string> => {
+    const prompt = getPersonSegmentationPrompt();
+    return generateImageFromPrompt(prompt, image);
+};
+
+export const harmonizeScene = async (compositeImage: string): Promise<string> => {
+    const prompt = getSceneHarmonizationPrompt();
+    return generateImageFromPrompt(prompt, compositeImage);
 };

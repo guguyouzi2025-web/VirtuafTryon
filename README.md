@@ -1,20 +1,72 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 虚拟试衣工作室 (Virtual Try-On Studio)
 
-# Run and deploy your AI Studio app
+一个基于 React 和 Google Gemini API 构建的 AI 驱动应用程序，可在数分钟内生成超写实的模特、应用自定义服装，并创建令人惊叹、可直接用于电子商务的产品图像。
 
-This contains everything you need to run your app locally.
+![Virtual Try-On Studio UI](https://storage.googleapis.com/aistudio-ux-team/prompts/project_screenshots/virtual_try_on.png)
+*应用主工作区界面，展示了模特预览、姿势选择面板以及服装和编辑控件。*
 
-View your app in AI Studio: https://ai.studio/apps/drive/1w5ak3LOSbHljNpj2X0EEM4oGtcicZRbS
+## ✨ 核心功能
 
-## Run Locally
+本应用为创建虚拟时尚摄影提供了一套端到端的解决方案。
 
-**Prerequisites:**  Node.js
+### 🤖 AI 模特生成
+*   **自定义创建:** 通过定义广泛的参数（包括国籍、年龄、体型、发型、脸型等）从零开始生成独一无二的模特。
+*   **摄影风格控制:** 通过设置拍摄类型（全身、肖像）、灯光风格、相机镜头和表情来微调虚拟拍摄效果。
+*   **智能匹配:** 只需上传一张服装照片，AI 就会分析其风格，自动生成一个完美匹配的模特。
 
+### 👕 虚拟试衣引擎
+*   **逼真悬垂:** 将任何服装应用到您的摆好姿势的模特上。AI 会根据模特的身体和姿势，以逼真的方式悬垂衣物。
+*   **服装分割:** 自动从上传的照片中分离出服装，使其可用于试穿。
+*   **面料模拟:** 指定面料类型（如棉、丝绸、牛仔布），以影响 AI 渲染服装的纹理、光泽和褶皱。
+*   **服装搭配:** 可应用整套服装、仅上衣，或将上衣与预设的下装（如牛仔裤、长裤）搭配。
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 🤸 先进的姿势系统
+*   **丰富的姿势库:** 从数十种专业时尚姿势中进行选择，涵盖从经典站姿到行走、旋转等动态动作。
+*   **AI 姿势生成:** AI 会在保留模特所有特征和服装的同时，生成该模特在所选姿势下的新图像。
+*   **姿势缓存:** 生成的姿势会缓存在本地，以加快后续在同一模特上的使用速度。
+
+### 🎨 强大的编辑套件
+*   **更换模特:** 在保持姿势、服装和背景不变的情况下，立即用新模特替换已生成图像中的模特。
+*   **更换背景:** 使用预设（如影棚、户外咖啡馆）或自定义文本提示无缝替换背景。AI 会自动调整模特身上的光照以匹配新环境。
+*   **魔法修复 (Inpainting):** 在最终图像的任何部分涂抹，并使用文本提示进行特定修改，例如改变颜色或修复微小瑕疵。
+*   **模特微调:** 使用类似 Inpainting 的界面微调基础模特的外观（例如，改变发量、调整微笑）。
+*   **高清放大:** 以更高分辨率 (2x) 导出最终图像。
+
+### 🚀 生产力与工作流
+*   **批量生成:** 通过选择多个模特和多个姿势进行组合，自动创建数百张产品图片。
+*   **场景编辑器:** 将多个模特合成为一张图像。从您保存的项目中添加角色，将他们布置在画布上，然后让 AI 协调光照和阴影，创造出一张统一的合影。
+*   **项目管理:** 将您的完整工作会话（包括模特、姿势、服装和最终图像）保存为项目。
+*   **资产库:** 维护您最喜爱的生成模特、已保存服装和项目模板的个人收藏，以便快速轻松地重复使用。
+
+### 🌐 分享与协作
+*   **可分享链接:** 为任何已保存的项目生成一个唯一的 URL。
+*   **查看与评论:** 任何拥有该链接的人都可以查看项目并发表评论，方便收集反馈。
+
+## 🛠️ 技术栈
+
+*   **前端:** React, TypeScript
+*   **AI 引擎:** Google Gemini API (`@google/genai`)
+    *   **图像生成:** `gemini-2.5-flash-image`
+    *   **文本/JSON 分析:** `gemini-2.5-pro`
+*   **样式:** Tailwind CSS (通过 CDN)
+*   **模块系统:** 原生 ES 模块与 `importmap` (无打包工具)
+*   **状态管理:** React Hooks, 自定义 `useHistory` 钩子用于撤销/重做
+*   **存储:** `localStorage` 用于缓存、项目、收藏和资产库
+*   **国际化 (i18n):** 通过自定义 React Context provider 支持英语和中文
+
+## ⚙️ 工作原理
+
+该应用的核心逻辑在于其复杂的提示工程。
+
+1.  从 UI 收集用户输入（例如，模特标准滑块、姿势选择）。
+2.  `prompts.ts` 文件包含的函数会将这些输入转换为专为 Gemini API 设计的详细、结构化的文本提示。
+3.  `services/geminiService.ts` 文件作为服务层，接收这些提示并构建对 `@google/genai` 的 API 请求，同时发送文本和图像数据。
+4.  该服务随后解析 API 响应，提取生成的 base64 图像数据，并将其传回 UI 进行显示。这个循环适用于每一个 AI 驱动的功能，从生成初始模特到更换背景。
+
+## 🚀 开始使用
+
+这是一个完全在浏览器中运行的静态 Web 应用程序。
+
+1.  **托管文件:** 使用任何简单的静态文件服务器托管项目目录。
+2.  **API 密钥:** 确保 Google Gemini API 密钥作为名为 `API_KEY` 的环境变量可用。该应用配置为直接从 `process.env.API_KEY` 读取它。
+3.  **打开 `index.html`:** 通过您的本地服务器访问 `index.html` 文件。

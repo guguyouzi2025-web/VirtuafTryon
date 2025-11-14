@@ -1,16 +1,19 @@
+
 import React from 'react';
 import { Pose } from '../../types';
 import { useI18n } from '../../i18n/i18n';
 import { Spinner } from '../shared/Spinner';
+import { RefreshIcon } from '../icons';
 
 interface PoseSelectorProps {
     poses: Pose[];
     selectedPose: Pose | null;
     loadingPoses: Set<string>;
     onPoseSelect: (pose: Pose) => void;
+    onRegenerate: (pose: Pose) => void;
 }
 
-export const PoseSelector: React.FC<PoseSelectorProps> = ({ poses, selectedPose, loadingPoses, onPoseSelect }) => {
+export const PoseSelector: React.FC<PoseSelectorProps> = React.memo(({ poses, selectedPose, loadingPoses, onPoseSelect, onRegenerate }) => {
     const { t } = useI18n();
 
     return (
@@ -29,9 +32,20 @@ export const PoseSelector: React.FC<PoseSelectorProps> = ({ poses, selectedPose,
                             <div className="aspect-square w-full rounded-md overflow-hidden ring-1 ring-gray-200">
                                 <img src={pose.imageUrl} alt={t(`poses.${pose.name}`)} className={`w-full h-full object-cover transition-opacity ${isLoading ? 'opacity-50' : ''}`}/>
                             </div>
-                            <p className={`text-center text-[10px] font-semibold mt-1 w-full truncate ${isSelected ? 'text-blue-700' : 'text-gray-700'}`}>
-                                {t(`poses.${pose.name}`)}
-                            </p>
+                            <div className="flex items-center justify-center w-full mt-1">
+                                <p className={`text-center text-[10px] font-semibold w-full truncate ${isSelected ? 'text-blue-700' : 'text-gray-700'}`}>
+                                    {t(`poses.${pose.name}`)}
+                                </p>
+                                {isSelected && !isLoading && (
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); onRegenerate(pose); }}
+                                        className="text-blue-600 hover:text-blue-800"
+                                        aria-label={t('buttons.regeneratePose')}
+                                    >
+                                        <RefreshIcon className="w-3 h-3 ml-0.5" />
+                                    </button>
+                                )}
+                            </div>
                             {isLoading && (
                                 <div className="absolute inset-0 flex items-center justify-center bg-white/70 rounded-lg">
                                     <Spinner size="sm"/>
@@ -43,4 +57,4 @@ export const PoseSelector: React.FC<PoseSelectorProps> = ({ poses, selectedPose,
             </div>
         </div>
     );
-};
+});

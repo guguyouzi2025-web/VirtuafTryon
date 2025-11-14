@@ -1,4 +1,5 @@
 
+
 import React, { useRef, useEffect, useState } from 'react';
 import { Button } from './shared/Button';
 import { Slider } from './shared/Slider';
@@ -90,7 +91,7 @@ export const GarmentEditor: React.FC<GarmentEditorProps> = ({ originalImage, seg
     
     tempCtx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
     tempCtx.globalCompositeOperation = 'destination-in';
-    tempCtx.drawImage(maskCanvas, 0, 0);
+    tempCtx.drawImage(maskCanvas, 0, 0, canvas.width, canvas.height);
 
     ctx.drawImage(tempCanvas, 0, 0);
   };
@@ -171,9 +172,9 @@ export const GarmentEditor: React.FC<GarmentEditorProps> = ({ originalImage, seg
     exportCanvas.height = canvas.height;
     const exportCtx = exportCanvas.getContext('2d')!;
     
-    exportCtx.drawImage(originalImg, 0, 0);
+    exportCtx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
     exportCtx.globalCompositeOperation = 'destination-in';
-    exportCtx.drawImage(maskCanvas, 0, 0);
+    exportCtx.drawImage(maskCanvas, 0, 0, canvas.width, canvas.height);
 
     const base64Image = exportCanvas.toDataURL('image/png').split(',')[1];
     onSave(base64Image);

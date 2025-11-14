@@ -23,13 +23,13 @@ const getBuildDescription = (build: string): string => {
 const getLightingDescription = (style: string): string => {
     switch (style) {
         case "Soft Studio Light":
-            return "soft, even studio lighting with a large octabox key light, filling in shadows for a clean, professional look";
+            return "soft even studio lighting";
         case "Dramatic Rim Light":
-            return "dramatic, high-contrast rim lighting from the side and back, creating a sharp silhouette and deep shadows";
+            return "dramatic high-contrast rim lighting";
         case "Cinematic Lighting":
-            return "moody cinematic lighting with a mix of warm and cool tones, creating a film-like atmosphere";
+            return "moody cinematic lighting, warm and cool tones";
         case "Golden Hour Glow":
-            return "warm, soft, and diffused golden hour sunlight, creating a beautiful, gentle glow on the subject";
+            return "warm soft golden hour sunlight";
         default:
             return style;
     }
@@ -38,11 +38,11 @@ const getLightingDescription = (style: string): string => {
 const getLensDescription = (lens: string): string => {
     switch (lens) {
         case "85mm Portrait Lens (f/1.4)":
-            return "shot on an 85mm f/1.4 lens, creating beautiful background compression and creamy bokeh";
+            return "85mm f/1.4 lens, creamy bokeh";
         case "50mm Standard Lens (f/1.8)":
-            return "shot on a 50mm f/1.8 lens, providing a natural field of view with pleasant depth of field";
+            return "50mm f/1.8 lens, natural field of view";
         case "35mm Environmental Lens (f/2.0)":
-            return "shot on a 35mm f/2.0 lens, capturing more of the environment with a wider perspective";
+            return "35mm f/2.0 lens, wider environmental perspective";
         default:
             return `shot on a ${lens}`;
     }
@@ -75,25 +75,36 @@ const getShotDescription = (shot: string): string => {
  * - Specifies a professional studio setting with neutral lighting and background to emphasize the model.
  * - The structure is optimized for clarity and effectiveness with image generation models.
  */
-export const getModelGenerationPrompt = (c: ModelCriteria): string =>
-  [
-    // Technical & Style Parameters
-    `ultra-realistic, hyper-detailed, photorealistic, 8k, sharp focus, professional photograph.`,
-    `${getLensDescription(c.lensType)}.`,
-    // Shot & Subject
-    `${getShotDescription(c.shotType)} of a ${c.ageRange} year old ${c.nationality} ${c.gender}.`,
-    // Detailed Features
-    `Detailed physical features: ${c.faceShape} face, ${c.skinTone} skin tone, ${c.eyeColor} eyes, and ${c.hairColor} ${c.hairStyle} hair.`,
-    `Body type: ${c.height}cm tall with ${getBuildDescription(c.build)}.`,
-    // Outfit
-    `The person is wearing a simple, plain white short-sleeved t-shirt and plain white shorts.`,
-    // Pose & Angle
-    `Posing with a ${c.expression.toLowerCase()} expression, looking directly at the camera.`,
-    `The camera is positioned at a ${c.cameraAngle.toLowerCase()}.`,
-    // Lighting & Environment
-    `Illuminated by ${getLightingDescription(c.lightingStyle)}.`,
-    `Set against a plain, seamless, pure white studio backdrop.`
-  ].join(' ');
+export const getModelGenerationPrompt = (c: ModelCriteria): string => {
+    // Simplified for better image model compatibility to address 500 errors.
+    const core_details = [
+      `${getShotDescription(c.shotType)}`,
+      `a ${c.ageRange} year old ${c.nationality} ${c.gender} fashion model`,
+      `${getBuildDescription(c.build)}`,
+      `${c.height}cm tall`,
+      `${c.skinTone} skin`,
+      `${c.faceShape} face`,
+      `${c.eyeColor} eyes`,
+      `${c.hairColor} ${c.hairStyle} hair`,
+      `${c.expression} expression`,
+      'looking at camera'
+    ];
+  
+    const outfit = 'wearing a simple plain white short-sleeved t-shirt and plain white shorts';
+  
+    const photo_style = [
+      'ultra-realistic photo',
+      'hyper-detailed',
+      '8k',
+      'sharp focus',
+      getLightingDescription(c.lightingStyle),
+      getLensDescription(c.lensType),
+      `${c.cameraAngle.toLowerCase()} angle`,
+      'plain seamless pure white studio backdrop'
+    ];
+    
+    return `${core_details.join(', ')}. ${outfit}. ${photo_style.join(', ')}.`;
+};
 
 
 /**
@@ -107,7 +118,7 @@ export const getModelGenerationPrompt = (c: ModelCriteria): string =>
  */
 export const getPoseGenerationPrompt = (posePrompt: string): string => 
   `Generate a new photograph of the person from the provided image, but in a new pose: "${posePrompt}".
-It is crucial that the person's face, hair, body, and all clothing and accessories remain identical to the original image.
+It is absolutely crucial that the person's face, hair, body, and all clothing and accessories remain identical to the original image.
 Only the pose should change.
 Output a full body photograph set against the same plain, seamless, pure white studio backdrop.`;
 
@@ -143,13 +154,14 @@ export const getVirtualTryOnPrompt = (garmentType: GarmentType, fabricType: stri
 **Source Images:**
 You are provided with two images:
 1.  **Target Model:** The person to dress.
-2.  **Segmented Garment:** The clothing isolated on a transparent background. This is your **source of truth** for shape, texture, color, and fine details.
+2.  **Segmented Garment:** The clothing isolated on a transparent background. This is your **unquestionable source of truth** for shape, texture, color, and all fine details.
 
-**Crucial Rules:**
-1.  **Fidelity to Source:** The final rendered garment MUST perfectly match the texture, material, color, and fine details (like seams, prints, or embroidery) from the **Segmented Garment** image. This is the highest priority.
-2.  **Preserve Person & Background:** Do NOT change the Target Model's face, hair, body shape, pose, or the background.
-3.  **Realistic Fit:** The garment must look completely natural on the person, aligning with their body shape and pose. All lighting, colors, and shadows must be consistent with the Target Model's photo.
-4.  ${fabricRule}`;
+**CRUCIAL, NON-NEGOTIABLE, STRICTLY ENFORCED RULES:**
+1.  **Absolute Fidelity to Source (HIGHEST PRIORITY):** The final rendered garment MUST perfectly and exactly match the texture, material, color, and fine details (like seams, prints, or embroidery) from the **Segmented Garment** image. Do not invent or alter details. This is the most important rule; failure to comply will result in an unacceptable output.
+2.  **Preserve Person & Background:** Do NOT change the Target Model's face, hair, body shape, pose, or the background. These elements must remain 100% identical to the Target Model image.
+3.  **Realistic Fit & Draping:** The garment must look completely natural and photorealistic on the person, aligning with their body shape and pose. All lighting, colors, and shadows on the garment must be perfectly consistent with the Target Model's photo.
+4.  **Unyielding Proportions:** The garment's original length and proportions (e.g., crop top, long coat) MUST be accurately and faithfully represented on the model's body. Under NO circumstances should you change a short top into a long one or a jacket into a dress.
+5.  ${fabricRule}`;
 
   switch (garmentType) {
     case 'top only':
@@ -157,7 +169,7 @@ You are provided with two images:
 
 ${baseInstructions}
 
-5.  **PRESERVE BOTTOMS:** The Target Model's original pants, skirt, or any lower body clothing MUST remain completely unchanged.`;
+6.  **STRICTLY PRESERVE BOTTOMS:** The Target Model's original pants, skirt, or any lower body clothing MUST remain completely unchanged and visible.`;
       break;
     
     case 'bottom only':
@@ -165,7 +177,7 @@ ${baseInstructions}
 
 ${baseInstructions}
 
-5.  **PRESERVE TOP:** The Target Model's original shirt, t-shirt, or any upper body clothing MUST remain completely unchanged.`;
+6.  **STRICTLY PRESERVE TOP:** The Target Model's original shirt, t-shirt, or any upper body clothing MUST remain completely unchanged and visible.`;
       break;
 
     case 'full outfit':
@@ -174,12 +186,40 @@ ${baseInstructions}
 
 ${baseInstructions}
 
-5.  **MANDATORY INSTRUCTION: REPLACE ALL CLOTHING.** It is not optional. You MUST replace **every single piece of clothing** on the Target Model. Do NOT preserve the original pants, shirt, or any other garment, even if they look similar to the new ones. The final image must ONLY show the model wearing the new outfit provided. Both top and bottom garments from the original model MUST be removed and replaced.`;
+6.  **MANDATORY INSTRUCTION: REPLACE ALL CLOTHING.** It is not optional. You MUST replace **every single piece of clothing** on the Target Model. Do NOT preserve the original pants, shirt, or any other garment, even if they look similar to the new ones. The final image must ONLY show the model wearing the new outfit provided. Both top and bottom garments from the original model MUST be removed and replaced.`;
       break;
   }
 
   return instructions;
 };
+
+/**
+ * Generates a prompt for a combined virtual try-on (top + bottom).
+ * @param fabricType - The primary fabric of the top garment (can be expanded).
+ * @returns A specific string prompt for the combined virtual try-on.
+ */
+export const getCombinedVirtualTryOnPrompt = (fabricType: string): string => {
+  const fabricRule = `**Fabric Rendering:** ${getFabricDescription(fabricType)}`;
+
+  return `
+**Source Images:**
+You are provided with THREE images:
+1.  **Target Model:** The person to dress.
+2.  **Segmented Top Garment:** The shirt/top to apply.
+3.  **Segmented Bottom Garment:** The pants/skirt to apply.
+
+**Task:** Dress the **Target Model** with BOTH the **Segmented Top Garment** and the **Segmented Bottom Garment**, replacing their entire original outfit.
+
+**CRUCIAL, NON-NEGOTIABLE, STRICTLY ENFORCED RULES:**
+1.  **Absolute Fidelity to Sources (HIGHEST PRIORITY):** The final rendered garments MUST perfectly and exactly match the texture, material, color, and fine details from BOTH source garment images. Do not invent or alter details.
+2.  **Preserve Person & Background:** Do NOT change the Target Model's face, hair, body shape, pose, or the background. These elements must remain 100% identical to the Target Model image.
+3.  **Realistic Fit & Draping:** The combined outfit must look completely natural and photorealistic on the person, aligning with their body shape and pose. All lighting, colors, and shadows on the garments must be perfectly consistent with the Target Model's photo.
+4.  **Unyielding Proportions:** Preserve the original proportions of both garments (e.g., crop top, long pants).
+5.  **Full Replacement:** You MUST replace the model's entire original outfit. Do not keep any original clothing.
+6.  ${fabricRule}
+`;
+};
+
 
 /**
  * Generates a prompt for segmenting a full outfit from an image.
@@ -272,9 +312,41 @@ You are provided with a photograph of a person. Your goal is to replace the back
 
 **New Background Description:** "${backgroundDescription}"
 
-**Crucial Rules:**
-1.  **Preserve the Subject:** The person, their clothing, their pose, and any objects they are holding MUST remain completely unchanged. Do not alter them in any way.
-2.  **Realistic Lighting:** Adjust the lighting on the person to realistically match the new background environment. For example, if the new background is a sunny beach, the person should be lit by bright sunlight.
-3.  **Seamless Composite:** The final image should look like a real photograph, not an obvious composite. Ensure edges are clean and the perspective matches.
+**CRUCIAL, NON-NEGOTIABLE, STRICTLY ENFORCED RULES:**
+1.  **Preserve the Subject (PERSON AND CLOTHING):** The person, their clothing, their pose, and any objects they are holding MUST remain completely unchanged and identical to the original. Do not alter them in any way. This is a background replacement task ONLY.
+
+2.  **ABSOLUTE PRIORITY: REALISTIC LIGHTING INTEGRATION:** This is the most important rule. You MUST meticulously adjust the lighting, shadows, and color temperature on the person to perfectly and flawlessly match the new background environment.
+    -   **Example:** If the new background is a sunny beach, the person MUST be lit by bright, hard sunlight with corresponding sharp shadows. If the background is a neon-lit city at night, the person MUST have colored rim lighting and reflections from the environment.
+    -   **THIS IS NOT OPTIONAL.** The final image's believability depends entirely on this step. The lighting on the subject cannot look like it's from the old photo. It must look like the subject was *actually photographed in the new location*.
+    -   Failure to match the lighting will result in an unacceptable, unrealistic composite.
+
+3.  **Seamless Composite:** The final image must look like a single, authentic photograph, not an obvious digital composite. Ensure edges are clean, the perspective matches, and there are no halos or artifacts.
 `;
 };
+
+export const getInpaintingPrompt = (inpaintPrompt: string): string => {
+  return `
+**Task: Inpainting (Partial Redraw)**
+You are provided with an image and a mask.
+Your task is to redraw ONLY the area indicated by the mask based on the following instruction: "${inpaintPrompt}".
+
+**Crucial Rules:**
+1.  **Strictly Local Edit:** ONLY modify the pixels within the masked region. The rest of the image must remain absolutely unchanged.
+2.  **Seamless Blending:** The newly generated content inside the mask must blend perfectly and seamlessly with the surrounding, unedited parts of the image. The transition in texture, lighting, and color must be invisible.
+3.  **Follow Prompt:** The changes you make must accurately reflect the user's text prompt.
+4.  **High Fidelity:** The final result must be a photorealistic, high-quality photograph.
+`;
+};
+
+export const getUpscalingPrompt = (scale: number = 2): string => {
+    return `
+**Task: Upscale Image**
+Upscale the provided image to ${scale}x its original resolution.
+
+**Crucial Rules:**
+1.  **Enhance Details:** Sharpen existing details and textures. Do not blur or soften the image.
+2.  **No New Elements:** Do NOT add any new objects, features, or elements to the image.
+3.  **Preserve Original Content:** The content, composition, and colors of the image must remain identical to the original.
+4.  **Output High Resolution:** The final output must be a high-resolution, sharp, and photorealistic photograph.
+`;
+}

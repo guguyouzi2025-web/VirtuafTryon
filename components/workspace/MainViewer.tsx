@@ -1,6 +1,8 @@
 import React from 'react';
 import { Spinner } from '../shared/Spinner';
 import { useI18n } from '../../i18n/i18n';
+import { Button } from '../shared/Button';
+import { MagicWandIcon } from '../icons';
 
 interface MainViewerProps {
     posedOrInitialImage: string | null;
@@ -8,9 +10,10 @@ interface MainViewerProps {
     isCurrentPoseLoading: boolean;
     isLoadingTryOn: boolean;
     isGarmentReady: boolean;
+    onRefineModel: () => void;
 }
 
-export const MainViewer: React.FC<MainViewerProps> = ({ posedOrInitialImage, finalImage, isCurrentPoseLoading, isLoadingTryOn, isGarmentReady }) => {
+export const MainViewer: React.FC<MainViewerProps> = React.memo(({ posedOrInitialImage, finalImage, isCurrentPoseLoading, isLoadingTryOn, isGarmentReady, onRefineModel }) => {
     const { t } = useI18n();
 
     return (
@@ -18,8 +21,8 @@ export const MainViewer: React.FC<MainViewerProps> = ({ posedOrInitialImage, fin
             {/* Before */}
             <div className="space-y-4">
                 <h3 className="font-bold text-lg text-center">{t('workspace.posedModel')}</h3>
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                    <div className="w-full aspect-[3/4] rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden relative">
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 relative">
+                    <div className="w-full aspect-[3/4] rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
                         {isCurrentPoseLoading && (
                             <div className="absolute inset-0 bg-gray-200/80 flex flex-col items-center justify-center z-10">
                                 <Spinner/>
@@ -32,6 +35,17 @@ export const MainViewer: React.FC<MainViewerProps> = ({ posedOrInitialImage, fin
                                 <p className="text-gray-500">{t('workspace.posedModelPlaceholder')}</p>
                             </div>
                         )}
+                    </div>
+                     <div className="absolute bottom-6 right-6 z-10">
+                        <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={onRefineModel}
+                            className="!rounded-full shadow-lg !py-2 !px-4 inline-flex items-center gap-2"
+                        >
+                            <MagicWandIcon className="w-4 h-4" />
+                            <span>{t('buttons.refineModel')}</span>
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -55,4 +69,4 @@ export const MainViewer: React.FC<MainViewerProps> = ({ posedOrInitialImage, fin
             </div>
         </div>
     );
-};
+});

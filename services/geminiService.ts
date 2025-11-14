@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Modality, GenerateContentResponse, Type } from "@google/genai";
-import { getModelGenerationPrompt, getPoseGenerationPrompt, getVirtualTryOnPrompt, getGarmentSegmentationPrompt, getGarmentRefinementPrompt, getModelCriteriaFromGarmentPrompt, getSwapModelPrompt, getChangeBackgroundPrompt } from '../prompts';
+import { getModelGenerationPrompt, getPoseGenerationPrompt, getVirtualTryOnPrompt, getGarmentSegmentationPrompt, getGarmentRefinementPrompt, getModelCriteriaFromGarmentPrompt, getSwapModelPrompt, getChangeBackgroundPrompt, getInpaintingPrompt, getUpscalingPrompt, getCombinedVirtualTryOnPrompt } from '../prompts';
 import { ModelCriteria, GarmentType } from "../types";
 import { GeminiError } from "./geminiError";
 
@@ -218,6 +218,38 @@ export const performVirtualTryOn = async (modelWithPoseImage: string, segmentedG
     }
 };
 
+export const performCombinedVirtualTryOn = async (modelWithPoseImage: string, topGarmentImage: string, bottomGarmentImage: string, fabricType: string): Promise<string> => {
+    const ai = getAiClient();
+    const prompt = getCombinedVirtualTryOnPrompt(fabricType);
+    
+    const modelImagePart = { inlineData: { mimeType: 'image/png', data: modelWithPoseImage } };
+    const topGarmentPart = { inlineData: { mimeType: 'image/png', data: topGarmentImage } };
+    const bottomGarmentPart = { inlineData: { mimeType: 'image/png', data: bottomGarmentImage } };
+    const textPart = { text: prompt };
+
+    try {
+        const response = await ai.models.generateContent({
+            model: IMAGE_MODEL_NAME,
+            contents: { parts: [modelImagePart, topGarmentPart, bottomGarmentPart, textPart] },
+            config: {
+                responseModalities: [Modality.IMAGE],
+            },
+        });
+        return parseImageResponse(response);
+    } catch (error: any) {
+        console.error("Error in combined virtual try-on:", error);
+        if (error instanceof GeminiError) {
+            throw error;
+        }
+        const errorMessage = (error?.message || '').toLowerCase();
+        if (errorMessage.includes('429') || errorMessage.includes('resource_exhausted')) {
+            throw new GeminiError("Rate limit exceeded.", 'RATE_LIMIT_EXCEEDED');
+        }
+        throw new GeminiError(error.message || 'An unknown API error occurred.', 'API_ERROR');
+    }
+};
+
+
 export const swapModel = async (baseImage: string, criteria: Partial<ModelCriteria>): Promise<string> => {
     const prompt = getSwapModelPrompt(criteria);
     return generateImageFromPrompt(prompt, baseImage);
@@ -225,5 +257,38 @@ export const swapModel = async (baseImage: string, criteria: Partial<ModelCriter
 
 export const changeBackground = async (baseImage: string, backgroundPrompt: string): Promise<string> => {
     const prompt = getChangeBackgroundPrompt(backgroundPrompt);
+    return generateImageFromPrompt(prompt, baseImage);
+};
+
+export const inpaintImage = async (baseImage: string, maskImage: string, userPrompt: string): Promise<string> => {
+    const ai = getAiClient();
+    const prompt = getInpaintingPrompt(userPrompt);
+
+    const baseImagePart = { inlineData: { mimeType: 'image/png', data: baseImage } };
+    const maskImagePart = { inlineData: { mimeType: 'image/png', data: maskImage } };
+    const textPart = { text: prompt };
+
+    try {
+        const response = await ai.models.generateContent({
+            model: IMAGE_MODEL_NAME,
+            contents: { parts: [textPart, baseImagePart, maskImagePart] },
+            config: {
+                responseModalities: [Modality.IMAGE],
+            },
+        });
+        return parseImageResponse(response);
+    } catch (error: any) {
+        console.error("Error in inpainting:", error);
+        if (error instanceof GeminiError) throw error;
+        const errorMessage = (error?.message || '').toLowerCase();
+        if (errorMessage.includes('429') || errorMessage.includes('resource_exhausted')) {
+            throw new GeminiError("Rate limit exceeded.", 'RATE_LIMIT_EXCEEDED');
+        }
+        throw new GeminiError(error.message || 'An unknown API error occurred.', 'API_ERROR');
+    }
+};
+
+export const upscaleImage = async (baseImage: string, scale: number = 2): Promise<string> => {
+    const prompt = getUpscalingPrompt(scale);
     return generateImageFromPrompt(prompt, baseImage);
 };

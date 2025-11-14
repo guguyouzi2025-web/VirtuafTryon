@@ -15,7 +15,8 @@
     "processing": "Processing...",
     "browse": "Browse files",
     "replaceGarment": "Replace Garment",
-    "downloadImage": "Download Image",
+    "download": "Download",
+    "downloadSelected": "Download Selected",
     "refineAI": "Refine (AI)",
     "refineManual": "Edit",
     "refining": "Refining...",
@@ -23,6 +24,7 @@
     "applying": "Applying...",
     "saveChanges": "Save Changes",
     "cancel": "Cancel",
+    "clearMask": "Clear Mask",
     "collect": "Collect",
     "remove": "Remove",
     "swapModel": "Swap Model",
@@ -31,7 +33,15 @@
     "random": "Random",
     "custom": "Custom",
     "close": "Close",
-    "myCollection": "My Collection"
+    "myCollection": "My Collection",
+    "magicFix": "Magic Fix",
+    "downloadHd": "HD (2x)",
+    "downloadStandard": "Standard (1x)",
+    "downloadUhd": "Ultra HD (4x)",
+    "comingSoon": "Coming Soon",
+    "upscaling": "Upscaling...",
+    "regeneratePose": "Regenerate pose",
+    "refineModel": "Refine Model"
   },
   "modelCreation": {
     "title": "Create Your Virtual Model",
@@ -126,6 +136,11 @@
         "successTitle": "Upload Successful!",
         "successSubtitle": "Ready for try-on. Upload another to replace."
     },
+    "garmentLibrary": {
+      "title": "Garment Library",
+      "addNew": "Add New",
+      "empty": "Your library is empty. Add a garment to get started."
+    },
     "segment": {
         "original": "Original",
         "segmented": "Segmented",
@@ -140,7 +155,15 @@
     "previewPlaceholder": "Your final image will appear here.",
     "previewReady": "Ready to apply garment.",
     "finalImageAlt": "Final try-on result",
-    "fabricType": "Fabric Type"
+    "fabricType": "Fabric Type",
+    "bottomsLibrary": "Pair with Bottoms"
+  },
+  "addGarmentModal": {
+    "title": "Add New Garment",
+    "uploadStep": "1. Upload Image",
+    "reviewStep": "2. Review Segmentation",
+    "save": "Save to Library",
+    "segmenting": "Segmenting..."
   },
   "errors": {
     "generateModels": "Failed to generate models. Please try again.",
@@ -155,7 +178,10 @@
     "smartMatchFailed": "Smart match failed. Please try again or create a model manually.",
     "analyzeGarment": "Failed to analyze garment style. Please try again.",
     "generationFailed": "Generation failed.",
-    "safetyBlock": "Generation failed due to safety policies. Please try adjusting your description or settings."
+    "safetyBlock": "Generation failed due to safety policies. Please try adjusting your description or settings.",
+    "inpaintFailed": "Partial redraw failed. Please try again.",
+    "upscaleFailed": "HD processing failed. Please try again.",
+    "refineModelFailed": "Model refinement failed. Please try again."
   },
   "swapModelModal": {
     "title": "Swap Model",
@@ -185,6 +211,18 @@
     "noModels": "No models in your collection to select from.",
     "error": "Error"
   },
+  "inpaintingModal": {
+    "title": "Magic Fix (Inpainting)",
+    "instruction": "Use the brush to mask the area you want to change, then describe what you'd like to see.",
+    "promptLabel": "Describe your change",
+    "promptPlaceholder": "e.g., change color to red"
+  },
+  "refineModelModal": {
+    "title": "Refine Model",
+    "instruction": "Use the brush to mask an area of the model (e.g., hair, face) and describe your desired change.",
+    "promptLabel": "Describe your change",
+    "promptPlaceholder": "e.g., more natural smile, add volume to hair"
+  },
   "myProjectsModal": {
     "title": "My Projects",
     "empty": "You have no saved projects.",
@@ -196,7 +234,25 @@
   "toasts": {
     "projectSaved": "Project saved successfully!",
     "projectLoaded": "Project loaded.",
-    "projectDeleted": "Project deleted."
+    "projectDeleted": "Project deleted.",
+    "modelRefined": "Model updated. Poses will be re-generated upon selection."
+  },
+  "onboarding": {
+    "welcomeTitle": "Welcome to the Workspace!",
+    "welcomeText": "This quick guide will walk you through the main steps to create your first virtual try-on image.",
+    "step1Title": "Step 1: Select a Pose",
+    "step1Text": "Start by choosing a pose for your model from the library on the left. This will be the base for your final image.",
+    "step2Title": "Step 2: Your Garment",
+    "step2Text": "Next, add a garment to your library. You can upload images of your own clothes here.",
+    "step3Title": "Step 3: Apply the Garment",
+    "step3Text": "Once you have a model in a pose and a garment selected, click here to let the AI perform the virtual try-on.",
+    "step4Title": "Step 4: Review & Download",
+    "step4Text": "Your final image appears in the preview panel. From here, you can use the editing tools or download your creation.",
+    "finishTitle": "You're All Set!",
+    "finishText": "That's the basic workflow! Feel free to explore other powerful features like swapping models, changing backgrounds, and batch generation.",
+    "next": "Next",
+    "skip": "Skip Tutorial",
+    "finish": "Finish"
   },
   "backgroundPresets": {
     "studio_white": "Studio White",
@@ -286,7 +342,16 @@
     "medium_wavy": "Medium Wavy",
     "long_straight": "Long Straight",
     "curly_afro": "Curly Afro",
-    "slicked_back": "Slicked Back"
+    "slicked_back": "Slicked Back",
+    "high_ponytail": "High Ponytail",
+    "bun": "Bun",
+    "buzz_cut": "Buzz Cut",
+    "undercut": "Undercut",
+    "side_part": "Side Part",
+    "bob_cut": "Bob Cut",
+    "braided_ponytail": "Braided Ponytail",
+    "crew_cut": "Crew Cut",
+    "messy_quiff": "Messy Quiff"
   },
   "eyeColors": {
     "brown": "Brown",
@@ -375,5 +440,10 @@
     "denim": "Denim",
     "leather": "Leather",
     "wool": "Wool"
+  },
+  "bottomPresets": {
+    "blue_jeans": "Blue Jeans",
+    "black_trousers": "Black Trousers",
+    "white_shorts": "White Shorts"
   }
 }

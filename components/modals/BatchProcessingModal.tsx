@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '../shared/Button';
 import { useI18n } from '../../i18n/i18n';
 import { Model, Pose, GarmentType } from '../../types';
@@ -40,6 +40,7 @@ export const BatchProcessingModal: React.FC<BatchProcessingModalProps> = ({ isOp
     const [results, setResults] = useState<Result[]>([]);
     const [progress, setProgress] = useState({ current: 0, total: 0 });
     const [isGenerating, setIsGenerating] = useState(false);
+    const [selectedImages, setSelectedImages] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         if (isOpen) {
@@ -69,6 +70,7 @@ export const BatchProcessingModal: React.FC<BatchProcessingModalProps> = ({ isOp
             setSelectedPoses(new Set());
             setResults([]);
             setIsGenerating(false);
+            setSelectedImages(new Set());
         }
     }, [isOpen, initialModel]);
 
@@ -129,16 +131,36 @@ export const BatchProcessingModal: React.FC<BatchProcessingModalProps> = ({ isOp
         setStep('complete');
     };
 
-    const handleDownloadAll = async () => {
-        const successfulResults = results.filter(r => r.status === 'success' && r.image);
-        for (const result of successfulResults) {
-            const link = document.createElement('a');
-            link.href = `data:image/png;base64,${result.image}`;
-            link.download = `result_${result.key}.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            await new Promise(resolve => setTimeout(resolve, 300)); // Stagger downloads
+    const downloadImages = async (imageKeys: string[]) => {
+      const imagesToDownload = results.filter(r => imageKeys.includes(r.key) && r.status === 'success' && r.image);
+      for (const result of imagesToDownload) {
+          const link = document.createElement('a');
+          link.href = `data:image/png;base64,${result.image}`;
+          link.download = `result_${result.key}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          await new Promise(resolve => setTimeout(resolve, 300)); // Stagger downloads
+      }
+    };
+
+    const handleDownloadAll = () => {
+        const allSuccessfulKeys = results.filter(r => r.status === 'success' && r.image).map(r => r.key);
+        downloadImages(allSuccessfulKeys);
+    };
+
+    const handleDownloadSelected = () => {
+        downloadImages(Array.from(selectedImages));
+    };
+
+    const successfulResults = useMemo(() => results.filter(r => r.status === 'success' && r.image), [results]);
+    const areAllSelected = useMemo(() => successfulResults.length > 0 && selectedImages.size === successfulResults.length, [selectedImages, successfulResults]);
+
+    const handleToggleSelectAll = () => {
+        if (areAllSelected) {
+            setSelectedImages(new Set());
+        } else {
+            setSelectedImages(new Set(successfulResults.map(r => r.key)));
         }
     };
     
@@ -205,23 +227,49 @@ export const BatchProcessingModal: React.FC<BatchProcessingModalProps> = ({ isOp
                 
                 {(step === 'progress' || step === 'complete') && (
                      <div className="flex-grow p-4 overflow-hidden flex flex-col">
-                        <div className="mb-4 text-center">
-                            {step === 'progress' && <p className="font-semibold">{t('batchProcessingModal.generating', { current: String(progress.current), total: String(progress.total) })}</p>}
-                            {step === 'complete' && <p className="font-semibold text-green-600">{t('batchProcessingModal.complete')}</p>}
+                        <div className="mb-4 flex justify-between items-center">
+                            <div className="text-center flex-grow">
+                                {step === 'progress' && <p className="font-semibold">{t('batchProcessingModal.generating', { current: String(progress.current), total: String(progress.total) })}</p>}
+                                {step === 'complete' && <p className="font-semibold text-green-600">{t('batchProcessingModal.complete')}</p>}
+                            </div>
+                             {step === 'complete' && successfulResults.length > 0 && (
+                                <div className="flex items-center space-x-2">
+                                    <input id="selectAll" type="checkbox" checked={areAllSelected} onChange={handleToggleSelectAll} className="h-4 w-4 rounded text-blue-600 focus:ring-blue-500 border-gray-300"/>
+                                    <label htmlFor="selectAll" className="text-sm font-medium text-gray-700">Select All</label>
+                                </div>
+                             )}
                         </div>
                         <div className="flex-grow overflow-y-auto grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 pr-2">
                              {results.map(result => (
-                                <div key={result.key} className="aspect-[3/4] border rounded-lg flex items-center justify-center bg-gray-100 overflow-hidden">
+                                <div key={result.key} className="relative aspect-[3/4] border rounded-lg flex items-center justify-center bg-gray-100 overflow-hidden">
                                     {result.status === 'pending' && <div className="w-full h-full bg-gray-200"></div>}
                                     {result.status === 'loading' && <Spinner size="sm" />}
-                                    {result.status === 'success' && result.image && <img src={`data:image/png;base64,${result.image}`} alt="Generated result" className="w-full h-full object-cover"/>}
+                                    {result.status === 'success' && result.image && 
+                                        <>
+                                            <img src={`data:image/png;base64,${result.image}`} alt="Generated result" className="w-full h-full object-cover"/>
+                                            <div 
+                                                className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors cursor-pointer"
+                                                onClick={() => toggleSelection(selectedImages, result.key, setSelectedImages)}
+                                            >
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={selectedImages.has(result.key)}
+                                                    readOnly
+                                                    className="absolute top-2 left-2 h-5 w-5 rounded text-blue-600 focus:ring-blue-500 border-gray-300 pointer-events-none"
+                                                />
+                                            </div>
+                                        </>
+                                    }
                                     {result.status === 'error' && <div className="text-center p-1"><XCircleIcon className="w-6 h-6 text-red-500 mx-auto"/><p className="text-xs text-red-600 mt-1">{t('batchProcessingModal.error')}</p></div>}
                                 </div>
                             ))}
                         </div>
                         {step === 'complete' && (
-                             <div className="pt-4 border-t mt-4 flex justify-center">
-                                <Button onClick={handleDownloadAll} className="py-3 px-8 text-lg">{t('batchProcessingModal.downloadAll')}</Button>
+                             <div className="pt-4 border-t mt-4 flex justify-center gap-4">
+                                <Button variant="secondary" onClick={handleDownloadSelected} disabled={selectedImages.size === 0}>
+                                    {t('buttons.downloadSelected')} ({selectedImages.size})
+                                </Button>
+                                <Button onClick={handleDownloadAll} disabled={successfulResults.length === 0} className="py-3 px-8 text-lg">{t('batchProcessingModal.downloadAll')}</Button>
                             </div>
                         )}
                     </div>

@@ -40,6 +40,12 @@ export interface GarmentData {
   original: string;
 }
 
+export interface Garment extends GarmentData {
+  id: string;
+  thumbnail: string;
+  type: GarmentType;
+}
+
 export interface WorkspaceState {
   selectedPose: Pose | null;
   posedImages: Record<string, string>;
@@ -56,4 +62,10 @@ export interface SavedProject {
   thumbnail: string;
   initialModel: Model;
   workspaceState: WorkspaceState;
+}
+
+export interface Bottom {
+    name: string;
+    thumbnail: string;
+    segmented: string;
 }

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { ModelCriteria, Model, GarmentData } from '../types';
-import { NATIONALITY_DEFAULTS_MAP } from '../constants';
+import { NATIONALITY_DEFAULTS_MAP, MALE_HAIR_STYLES, FEMALE_HAIR_STYLES } from '../constants';
 import { generateSingleModel, segmentGarment, generateModelCriteriaFromGarment } from '../services/geminiService';
 import { Button } from './shared/Button';
 import { DrapeLogo, FolderIcon, UserPlusIcon, SparklesIcon, CameraIcon } from './icons';
@@ -83,19 +83,28 @@ const ModelCreation: React.FC<ModelCreationProps> = ({ onModelCreated }) => {
     if (isSmartMatching) return;
     const defaults = NATIONALITY_DEFAULTS_MAP[criteria.nationality];
     if (defaults) {
+        const hairStyle = criteria.gender === 'Female' ? defaults.femaleHairStyle : defaults.maleHairStyle;
         setCriteria(c => ({
             ...c,
             skinTone: defaults.skinTone,
             faceShape: defaults.faceShape,
             eyeColor: defaults.eyeColor,
             hairColor: defaults.hairColor,
-            hairStyle: defaults.hairStyle,
+            hairStyle: hairStyle,
         }));
     }
-  }, [criteria.nationality, isSmartMatching]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [criteria.nationality, criteria.gender, isSmartMatching]);
 
   const handleCriteriaChange = (field: keyof ModelCriteria, value: any) => {
-    setCriteria(prev => ({...prev, [field]: value}));
+    setCriteria(prev => {
+        const newState = {...prev, [field]: value};
+        if (field === 'gender') {
+            const newHairStyle = value === 'Male' ? MALE_HAIR_STYLES[0] : FEMALE_HAIR_STYLES[0];
+            newState.hairStyle = newHairStyle;
+        }
+        return newState;
+    });
   }
 
   const isFormValid = useMemo(() => {

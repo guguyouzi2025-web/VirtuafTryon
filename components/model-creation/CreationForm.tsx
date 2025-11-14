@@ -3,7 +3,7 @@ import { ModelCriteria } from '../../types';
 import { Select } from '../shared/Select';
 import { Slider } from '../shared/Slider';
 import { useI18n } from '../../i18n/i18n';
-import { NATIONALITIES, GENDERS, SKIN_TONES, AGE_RANGES, BUILDS, HAIR_COLORS, HAIR_STYLES, EYE_COLORS, FACE_SHAPES, EXPRESSIONS, SHOT_TYPES, CAMERA_ANGLES, LIGHTING_STYLES, LENS_TYPES, HEIGHT_RANGES } from '../../constants';
+import { NATIONALITIES, GENDERS, SKIN_TONES, AGE_RANGES, BUILDS, HAIR_COLORS, MALE_HAIR_STYLES, FEMALE_HAIR_STYLES, EYE_COLORS, FACE_SHAPES, EXPRESSIONS, SHOT_TYPES, CAMERA_ANGLES, LIGHTING_STYLES, LENS_TYPES, HEIGHT_RANGES } from '../../constants';
 
 interface CreationFormProps {
     criteria: ModelCriteria;
@@ -25,6 +25,8 @@ export const CreationForm: React.FC<CreationFormProps> = ({ criteria, onCriteria
         }));
     };
 
+    const hairStyleOptions = criteria.gender === 'Male' ? MALE_HAIR_STYLES : FEMALE_HAIR_STYLES;
+
     return (
         <div className="space-y-6">
             <div>
@@ -37,7 +39,7 @@ export const CreationForm: React.FC<CreationFormProps> = ({ criteria, onCriteria
                     <Select label={t('modelCriteria.faceShape')} options={createTranslatedOptions(FACE_SHAPES, 'faceShapes')} value={criteria.faceShape} onChange={(e) => onCriteriaChange('faceShape', e.target.value)} onBlur={() => handleBlur('faceShape')} isInvalid={!!touched.faceShape && !criteria.faceShape} />
                     <Select label={t('modelCriteria.eyeColor')} options={createTranslatedOptions(EYE_COLORS, 'eyeColors')} value={criteria.eyeColor} onChange={(e) => onCriteriaChange('eyeColor', e.target.value)} onBlur={() => handleBlur('eyeColor')} isInvalid={!!touched.eyeColor && !criteria.eyeColor} />
                     <Select label={t('modelCriteria.hairColor')} options={createTranslatedOptions(HAIR_COLORS, 'hairColors')} value={criteria.hairColor} onChange={(e) => onCriteriaChange('hairColor', e.target.value)} onBlur={() => handleBlur('hairColor')} isInvalid={!!touched.hairColor && !criteria.hairColor} />
-                    <Select label={t('modelCriteria.hairStyle')} options={createTranslatedOptions(HAIR_STYLES, 'hairStyles')} value={criteria.hairStyle} onChange={(e) => onCriteriaChange('hairStyle', e.target.value)} onBlur={() => handleBlur('hairStyle')} isInvalid={!!touched.hairStyle && !criteria.hairStyle} />
+                    <Select label={t('modelCriteria.hairStyle')} options={createTranslatedOptions(hairStyleOptions, 'hairStyles')} value={criteria.hairStyle} onChange={(e) => onCriteriaChange('hairStyle', e.target.value)} onBlur={() => handleBlur('hairStyle')} isInvalid={!!touched.hairStyle && !criteria.hairStyle} />
                 </div>
             </div>
             <div className="pt-6 border-t border-gray-200">

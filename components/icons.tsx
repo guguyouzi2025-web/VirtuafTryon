@@ -114,3 +114,17 @@ export const FolderIcon: React.FC<{ className?: string }> = ({ className }) => (
       <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.875a60.07 60.07 0 0 1 .527-1.437 2.25 2.25 0 0 1 2.063-.992h13.22a2.25 2.25 0 0 1 2.063.992c.189.37.35.753.527 1.437M2.25 12.875a60.32 60.32 0 0 0 .527 1.437 2.25 2.25 0 0 0 2.063.992h13.22a2.25 2.25 0 0 0 2.063-.992c.189-.37.35-.753.527-1.437m-18 0a2.25 2.25 0 0 0-2.25 2.25v.75a2.25 2.25 0 0 0 2.25 2.25h18a2.25 2.25 0 0 0 2.25-2.25v-.75a2.25 2.25 0 0 0-2.25-2.25m-18 0H2.25Z" />
     </svg>
 );
+
+export const RefreshIcon: React.FC<{ className?: string }> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001a.75.75 0 0 1 .748.75.75.75 0 0 1-.748.75h-5.25a.75.75 0 0 1-.75-.75V4.625c0-.414.336-.75.75-.75s.75.336.75.75v3.507a9 9 0 1 0-2.12 5.923.75.75 0 0 1 .752.75 1.125 1.125 0 0 0 1.125-1.125 7.5 7.5 0 1 1-6.42-7.516.75.75 0 0 1 1.06.023 1.125 1.125 0 0 0 1.6.033Z" />
+    </svg>
+);
+
+export const MagicWandIcon: React.FC<{ className?: string }> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 6.75h.008v.008H9.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-1.875.375h.008v.008h-.008V7.125Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-3.04 2.812h.008v.008h-.008V9.938Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm1.125-2.25h.008v.008h-.008V7.688Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M10.34 1.87c.18-.521.784-.825 1.309-.645l.767.274a1.125 1.125 0 0 1 .645 1.31l-.273.766a1.125 1.125 0 0 1-1.31.645l-.767-.274a1.125 1.125 0 0 1-.645-1.31l.273-.766Zm-6.11 3.188c.18-.521.784-.825 1.309-.645l.767.274a1.125 1.125 0 0 1 .645 1.31l-.273.766a1.125 1.125 0 0 1-1.31.645l-.767-.274a1.125 1.125 0 0 1-.645-1.31l.273-.766Zm11.309 6.11c.18-.521.784-.825 1.309-.645l.767.274a1.125 1.125 0 0 1 .645 1.31l-.273.766a1.125 1.125 0 0 1-1.31.645l-.767-.274a1.125 1.125 0 0 1-.645-1.31l.273-.766Z" />
+    </svg>
+);

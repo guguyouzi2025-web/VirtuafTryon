@@ -1,4 +1,5 @@
-import { Pose } from './types';
+
+import { Pose, Bottom } from './types';
 import { POSE_ICONS } from './poseIcons';
 
 export const NATIONALITIES: string[] = [
@@ -21,49 +22,50 @@ export interface NationalityDefaults {
   faceShape: string;
   eyeColor: string;
   hairColor: string;
-  hairStyle: string;
+  femaleHairStyle: string;
+  maleHairStyle: string;
 }
 
 export const NATIONALITY_DEFAULTS_MAP: Record<string, NationalityDefaults> = {
     // Asia
-    "Chinese": { skinTone: "Light", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", hairStyle: "Long Straight" },
-    "Japanese": { skinTone: "Light", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", hairStyle: "Medium Wavy" },
-    "Korean": { skinTone: "Light", faceShape: "Heart", eyeColor: "Brown", hairColor: "Black", hairStyle: "Long Straight" },
-    "Indian": { skinTone: "Medium", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", hairStyle: "Long Straight" },
-    "Vietnamese": { skinTone: "Medium", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", hairStyle: "Long Straight" },
-    "Thai": { skinTone: "Medium", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", hairStyle: "Long Straight" },
-    "Filipino": { skinTone: "Medium", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", hairStyle: "Medium Wavy" },
-    "Saudi Arabian": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", hairStyle: "Medium Wavy" },
-    "Turkish": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", hairStyle: "Medium Wavy" },
-    "Iranian": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", hairStyle: "Medium Wavy" },
+    "Chinese": { skinTone: "Light", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Long Straight", maleHairStyle: "Side Part" },
+    "Japanese": { skinTone: "Light", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Bun", maleHairStyle: "Slicked Back" },
+    "Korean": { skinTone: "Light", faceShape: "Heart", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Medium Wavy", maleHairStyle: "Undercut" },
+    "Indian": { skinTone: "Medium", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Long Straight", maleHairStyle: "Slicked Back" },
+    "Vietnamese": { skinTone: "Medium", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "High Ponytail", maleHairStyle: "Slicked Back" },
+    "Thai": { skinTone: "Medium", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Long Straight", maleHairStyle: "Side Part" },
+    "Filipino": { skinTone: "Medium", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Medium Wavy", maleHairStyle: "Slicked Back" },
+    "Saudi Arabian": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Medium Wavy", maleHairStyle: "Side Part" },
+    "Turkish": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", femaleHairStyle: "Medium Wavy", maleHairStyle: "Slicked Back" },
+    "Iranian": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Medium Wavy", maleHairStyle: "Slicked Back" },
     // Europe
-    "British": { skinTone: "Fair", faceShape: "Oval", eyeColor: "Blue", hairColor: "Brown", hairStyle: "Medium Wavy" },
-    "French": { skinTone: "Fair", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", hairStyle: "Medium Wavy" },
-    "German": { skinTone: "Fair", faceShape: "Square", eyeColor: "Blue", hairColor: "Blonde", hairStyle: "Short Pixie Cut" },
-    "Italian": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", hairStyle: "Medium Wavy" },
-    "Spanish": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", hairStyle: "Long Straight" },
-    "Russian": { skinTone: "Fair", faceShape: "Round", eyeColor: "Blue", hairColor: "Blonde", hairStyle: "Long Straight" },
-    "Swedish": { skinTone: "Fair", faceShape: "Square", eyeColor: "Blue", hairColor: "Blonde", hairStyle: "Medium Wavy" },
-    "Polish": { skinTone: "Fair", faceShape: "Round", eyeColor: "Blue", hairColor: "Blonde", hairStyle: "Long Straight" },
-    "Ukrainian": { skinTone: "Fair", faceShape: "Round", eyeColor: "Blue", hairColor: "Blonde", hairStyle: "Long Straight" },
+    "British": { skinTone: "Fair", faceShape: "Oval", eyeColor: "Blue", hairColor: "Brown", femaleHairStyle: "Medium Wavy", maleHairStyle: "Undercut" },
+    "French": { skinTone: "Fair", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", femaleHairStyle: "Bun", maleHairStyle: "Side Part" },
+    "German": { skinTone: "Fair", faceShape: "Square", eyeColor: "Blue", hairColor: "Blonde", femaleHairStyle: "Short Pixie Cut", maleHairStyle: "Buzz Cut" },
+    "Italian": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", femaleHairStyle: "Medium Wavy", maleHairStyle: "Slicked Back" },
+    "Spanish": { skinTone: "Olive", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", femaleHairStyle: "High Ponytail", maleHairStyle: "Side Part" },
+    "Russian": { skinTone: "Fair", faceShape: "Round", eyeColor: "Blue", hairColor: "Blonde", femaleHairStyle: "Long Straight", maleHairStyle: "Buzz Cut" },
+    "Swedish": { skinTone: "Fair", faceShape: "Square", eyeColor: "Blue", hairColor: "Blonde", femaleHairStyle: "Medium Wavy", maleHairStyle: "Undercut" },
+    "Polish": { skinTone: "Fair", faceShape: "Round", eyeColor: "Blue", hairColor: "Blonde", femaleHairStyle: "Long Straight", maleHairStyle: "Buzz Cut" },
+    "Ukrainian": { skinTone: "Fair", faceShape: "Round", eyeColor: "Blue", hairColor: "Blonde", femaleHairStyle: "Bun", maleHairStyle: "Side Part" },
     // North America
-    "American": { skinTone: "Light", faceShape: "Oval", eyeColor: "Blue", hairColor: "Blonde", hairStyle: "Medium Wavy" },
-    "Canadian": { skinTone: "Light", faceShape: "Oval", eyeColor: "Blue", hairColor: "Brown", hairStyle: "Medium Wavy" },
-    "Mexican": { skinTone: "Tan", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", hairStyle: "Long Straight" },
+    "American": { skinTone: "Light", faceShape: "Oval", eyeColor: "Blue", hairColor: "Blonde", femaleHairStyle: "High Ponytail", maleHairStyle: "Undercut" },
+    "Canadian": { skinTone: "Light", faceShape: "Oval", eyeColor: "Blue", hairColor: "Brown", femaleHairStyle: "Medium Wavy", maleHairStyle: "Side Part" },
+    "Mexican": { skinTone: "Tan", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Long Straight", maleHairStyle: "Slicked Back" },
     // South America
-    "Brazilian": { skinTone: "Tan", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", hairStyle: "Medium Wavy" },
-    "Argentinian": { skinTone: "Tan", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", hairStyle: "Medium Wavy" },
-    "Colombian": { skinTone: "Tan", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", hairStyle: "Long Straight" },
+    "Brazilian": { skinTone: "Tan", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", femaleHairStyle: "Medium Wavy", maleHairStyle: "Side Part" },
+    "Argentinian": { skinTone: "Tan", faceShape: "Oval", eyeColor: "Brown", hairColor: "Brown", femaleHairStyle: "Long Straight", maleHairStyle: "Slicked Back" },
+    "Colombian": { skinTone: "Tan", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "High Ponytail", maleHairStyle: "Slicked Back" },
     // Africa
-    "Nigerian": { skinTone: "Dark", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", hairStyle: "Curly Afro" },
-    "Ethiopian": { skinTone: "Dark", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", hairStyle: "Curly Afro" },
-    "Egyptian": { skinTone: "Tan", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", hairStyle: "Medium Wavy" },
-    "South African": { skinTone: "Medium", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", hairStyle: "Curly Afro" },
-    "Kenyan": { skinTone: "Dark", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", hairStyle: "Curly Afro" },
-    "Ghanaian": { skinTone: "Dark", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", hairStyle: "Curly Afro" },
+    "Nigerian": { skinTone: "Dark", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Curly Afro", maleHairStyle: "Curly Afro" },
+    "Ethiopian": { skinTone: "Dark", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Curly Afro", maleHairStyle: "Curly Afro" },
+    "Egyptian": { skinTone: "Tan", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Medium Wavy", maleHairStyle: "Slicked Back" },
+    "South African": { skinTone: "Medium", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Curly Afro", maleHairStyle: "Curly Afro" },
+    "Kenyan": { skinTone: "Dark", faceShape: "Oval", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Curly Afro", maleHairStyle: "Curly Afro" },
+    "Ghanaian": { skinTone: "Dark", faceShape: "Round", eyeColor: "Brown", hairColor: "Black", femaleHairStyle: "Curly Afro", maleHairStyle: "Curly Afro" },
     // Oceania
-    "Australian": { skinTone: "Light", faceShape: "Oval", eyeColor: "Blue", hairColor: "Blonde", hairStyle: "Medium Wavy" },
-    "New Zealander": { skinTone: "Light", faceShape: "Round", eyeColor: "Brown", hairColor: "Brown", hairStyle: "Medium Wavy" }
+    "Australian": { skinTone: "Light", faceShape: "Oval", eyeColor: "Blue", hairColor: "Blonde", femaleHairStyle: "High Ponytail", maleHairStyle: "Undercut" },
+    "New Zealander": { skinTone: "Light", faceShape: "Round", eyeColor: "Brown", hairColor: "Brown", femaleHairStyle: "Medium Wavy", maleHairStyle: "Buzz Cut" }
 };
 
 export const GENDERS: string[] = ["Female", "Male"];
@@ -73,7 +75,9 @@ export const BUILDS: string[] = ["Slim", "Athletic", "Well-proportioned", "Curvy
 export const HEIGHT_RANGES: string[] = ["Petite", "Average", "Tall", "Custom"];
 
 export const HAIR_COLORS: string[] = ["Black", "Brown", "Blonde", "Red", "Gray", "White"];
-export const HAIR_STYLES: string[] = ["Short Pixie Cut", "Medium Wavy", "Long Straight", "Curly Afro", "Slicked Back"];
+export const FEMALE_HAIR_STYLES: string[] = ["Long Straight", "Medium Wavy", "Short Pixie Cut", "Bob Cut", "High Ponytail", "Braided Ponytail", "Bun", "Curly Afro"];
+export const MALE_HAIR_STYLES: string[] = ["Slicked Back", "Undercut", "Side Part", "Crew Cut", "Messy Quiff", "Medium Wavy", "Buzz Cut", "Curly Afro", "Long Straight"];
+
 export const EYE_COLORS: string[] = ["Brown", "Blue", "Green", "Hazel", "Gray"];
 export const FACE_SHAPES: string[] = ["Oval", "Round", "Square", "Heart", "Diamond"];
 
@@ -86,49 +90,69 @@ export const LENS_TYPES: string[] = ["85mm Portrait Lens (f/1.4)", "50mm Standar
 
 export const FABRIC_TYPES: string[] = ["None", "Cotton", "Silk", "Denim", "Leather", "Wool"];
 
+const POSE_PROMPTS: Record<string, string> = {
+    classic_front: "A full body shot of a model standing in a classic frontal pose, looking directly at the camera with a neutral expression.",
+    three_quarter_stand: "Model standing in a three-quarter pose, angled slightly away from the camera, looking towards the camera.",
+    contrapposto_lean: "Model in a relaxed contrapposto pose, with weight shifted to one leg, creating a gentle S-curve in the body.",
+    hands_in_pockets: "A casual pose with the model's hands placed in their pockets.",
+    one_hand_on_hip: "A confident pose with one hand placed firmly on the hip.",
+    walking_step: "A dynamic pose capturing the model in a natural walking motion, mid-stride.",
+    over_the_shoulder: "Model looking back over their shoulder towards the camera, showing the back and side of the outfit.",
+    crossed_arms: "A strong pose with arms crossed over the chest.",
+    wall_lean: "A relaxed pose with the model leaning against a plain wall.",
+    stool_edge_sit: "Model sitting on the edge of a stool, showcasing the drape of the garment.",
+    seated_forward_lean: "Model seated and leaning forward, with a thoughtful or engaged expression.",
+    hair_tuck: "A candid-style pose, with the model tucking a strand of hair behind their ear.",
+    hem_pinch: "A detailed shot where the model is lightly pinching the hem of their clothing to show the fabric.",
+    pocket_emphasis: "A pose emphasizing a pocket detail, perhaps with a thumb hooked in it.",
+    hood_up: "Model wearing a hooded garment with the hood up, creating a modern, urban look.",
+    cuff_adjust: "A detailed pose showing the model adjusting the cuff of their sleeve.",
+    bag_carry_side: "Model holding a handbag or tote bag naturally at their side.",
+    toe_point_lift: "An elegant pose with one foot pointing forward, heel slightly lifted.",
+    twirl: "A dynamic pose capturing the movement and flow of a skirt or dress during a twirl.",
+    back_view_head_turn: "Model facing away from the camera, with their head turned to look back, showcasing the back of the garment.",
+    side_profile: "A clean side profile shot of the model, standing straight.",
+    floor_sit_casual: "A relaxed pose with the model sitting casually on the floor.",
+    chair_backwards: "An unconventional seated pose, with the model sitting backwards on a chair.",
+    phone_in_hand: "A modern, lifestyle pose with the model holding a smartphone.",
+    zip_up: "A pose focused on the action of zipping up a jacket or top.",
+    waist_grip: "A pose with hands on the waist, defining the silhouette.",
+    sleeve_roll: "A casual action pose of rolling up sleeves.",
+    hat_tip: "A playful pose of tipping a hat.",
+    accessory_frame: "A pose where hands frame an accessory like a watch or bracelet.",
+    fabric_stretch: "A pose where the model gently stretches the fabric to demonstrate its elasticity."
+};
+
+export const POSES: Pose[] = Object.keys(POSE_ICONS).map(name => ({
+    name,
+    imageUrl: POSE_ICONS[name],
+    prompt: POSE_PROMPTS[name] || name.replace(/_/g, ' ') // Fallback prompt
+}));
+
+
 export const BACKGROUND_PRESETS: { name: string; prompt: string }[] = [
     { name: "studio_white", prompt: "a plain, seamless, pure white studio backdrop" },
     { name: "outdoor_cafe", prompt: "a charming outdoor cafe with blurred background" },
     { name: "city_night", prompt: "a vibrant city street at night with bokeh lights" },
-    { name: "beach_sunset", prompt: "a beautiful beach at sunset with golden light" },
-    { name: "modern_loft", prompt: "a stylish, sunlit modern loft apartment" },
-    { name: "forest_path", prompt: "a serene forest path with dappled sunlight" }
+    { name: "beach_sunset", prompt: "a beautiful beach at sunset with calm waves" },
+    { name: "modern_loft", prompt: "a spacious modern loft apartment with large windows" },
+    { name: "forest_path", prompt: "a tranquil forest path with sunbeams filtering through the trees" }
 ];
 
-const poseDefinitions: { name: string; prompt: string }[] = [
-  { name: "classic_front", prompt: "stand facing forward, feet shoulder-width, arms at sides, neutral posture" },
-  { name: "three_quarter_stand", prompt: "stand at 45 degrees, torso angled, head turned forward" },
-  { name: "contrapposto_lean", prompt: "shift weight to back leg, hips tilted, front knee soft, relaxed shoulders" },
-  { name: "hands_in_pockets", prompt: "stand with hands in front pockets, thumbs out, elbows relaxed" },
-  { name: "one_hand_on_hip", prompt: "stand with one hand on hip, other arm relaxed, slight hip shift" },
-  { name: "walking_step", prompt: "take a natural step, front foot slightly crossing, arms swinging lightly" },
-  { name: "over_the_shoulder", prompt: "turn back slightly, head looking over shoulder, shoulders relaxed" },
-  { name: "crossed_arms", prompt: "stand with arms loosely crossed, shoulders down, spine tall" },
-  { name: "wall_lean", prompt: "lean one shoulder against wall, one knee bent, ankles relaxed" },
-  { name: "stool_edge_sit", prompt: "sit on stool edge, knees together or ankles crossed, back tall, hands on thighs" },
-  { name: "seated_forward_lean", prompt: "sit with elbows on thighs, slight forward lean, hands relaxed" },
-  { name: "hair_tuck", prompt: "raise one hand to tuck hair behind ear, chin slightly down" },
-  { name: "hem_pinch", prompt: "lightly pinch garment hem with one hand, other arm relaxed" },
-  { name: "pocket_emphasis", prompt: "place both hands into pockets, thumbs hooked, stance relaxed" },
-  { name: "hood_up", prompt: "raise hood, head slightly down, eyes upward without tilting torso" },
-  { name: "cuff_adjust", prompt: "lift hands to adjust sleeve cuff, wrists visible, elbows close to body" },
-  { name: "bag_carry_side", prompt: "hold bag at side with straight arm, opposite hand relaxed on hip or thigh" },
-  { name: "toe_point_lift", prompt: "lift front leg slightly, toe pointed forward, knee soft, balance steady" },
-  { name: "twirl", prompt: "rotate torso with a gentle skirt or dress swing, arms relaxed outward" },
-  { name: "back_view_head_turn", prompt: "stand facing away, head turned to side, arms at sides" },
-  { name: "side_profile", prompt: "stand in side profile, arms relaxed, posture straight" },
-  { name: "floor_sit_casual", prompt: "sit on floor, one knee up, other leg extended, hands resting beside hips" },
-  { name: "chair_backwards", prompt: "sit astride a chair, arms draped over backrest, shoulders relaxed" },
-  { name: "phone_in_hand", prompt: "hold phone in one hand near hip or chest, opposite arm relaxed" },
-  { name: "zip_up", prompt: "grasp zipper with both hands, pull halfway, elbows slightly bent" },
-  { name: "waist_grip", prompt: "place both hands lightly on belt or waistband, elbows angled out" },
-  { name: "sleeve_roll", prompt: "roll sleeve with one hand while other forearm is raised" },
-  { name: "hat_tip", prompt: "touch brim with fingertips, tilt hat slightly, head tilted a touch" },
-  { name: "accessory_frame", prompt: "raise fingers near collarbone or ear to frame accessory, wrist relaxed" },
-  { name: "fabric_stretch", prompt: "hold fabric edges with both hands and stretch gently outward" }
+export const BOTTOM_PRESETS: Bottom[] = [
+    {
+        name: "blue_jeans",
+        thumbnail: "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIGZpbGw9Im5vbmUiPgogICAgICAgIDxyZWN0IGZpbGw9IiNGRkZGRkYiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48L3JlY3Q+CiAgICAgICAgPHBhdGggZD0iTSAzMCw5NSBMIDIwLDEwIEggNTUgTCA0NSw5NSBaIiBmaWxsPSIjM2I4MmY2Ij48L3BhdGg+CiAgICAgICAgPHBhdGggZD0iTSA3MCw5NSBMIDgwLDEwIEggNDUgTCA1NSw5NSBaIiBmaWxsPSIjM2I4MmY2Ij48L3BhdGg+CiAgICAgICAgPHBhdGggZD0iTSA0NSwxMCBIIDU1IEwgNTAsMjAgWiIgZmlsbD0iIzI1NjNlYiI+PC9wYXRoPgogICAgPC9nPgo8L3N2Zz4=",
+        segmented: "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIGZpbGw9Im5vbmUiPgogICAgICAgIDxwYXRoIGQ9Ik0gMzAsOTUgTCAyMCwxMCBIIDU1IEwgNDUsOTUgWiIgZmlsbD0iIzNiODJmNiI+PC9wYXRoPgogICAgICAgIDxwYXRoIGQ9Ik0gNzAsOTUgTCA4MCwxMCBIIDQ1IEwgNTUsOTUgWiIgZmlsbD0iIzNiODJmNiI+PC9wYXRoPgogICAgICAgIDxwYXRoIGQ9Ik0gNDUsMTAgSCA1NSBMIDUwLDIwIFoiIGZpbGw9IiMyNTYzZWIiPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+",
+    },
+    {
+        name: "black_trousers",
+        thumbnail: "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIGZpbGw9Im5vbmUiPgogICAgICAgIDxyZWN0IGZpbGw9IiNGRkZGRkYiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48L3JlY3Q+CiAgICAgICAgPHBhdGggZD0iTSAzMCw5NSBMIDI1LDEwIEggNTUgTCA0NSw5NSBaIiBmaWxsPSIjMTcyYTRkIj48L3BhdGg+CiAgICAgICAgPHBhdGggZD0iTSA3MCw5NSBMIDc1LDEwIEggNDUgTCA1NSw5NSBaIiBmaWxsPSIjMTcyYTRkIj48L3BhdGg+CiAgICAgICAgPHBhdGggZD0iTSA0NSwxMCBIIDU1IEwgNTAsMjAgWiIgZmlsbD0iIzExMTgyNyI+PC9wYXRoPgogICAgPC9nPgo8L3N2Zz4=",
+        segmented: "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIGZpbGw9Im5vbmUiPgogICAgICAgIDxwYXRoIGQ9Ik0gMzAsOTUgTCAyNSwxMCBIIDU1IEwgNDUsOTUgWiIgZmlsbD0iIzE3MmE0ZCI+PC9wYXRoPgogICAgICAgIDxwYXRoIGQ9Ik0gNzAsOTUgTCA3NSwxMCBIIDQ1IEwgNTUsOTUgWiIgZmlsbD0iIzE3MmE0ZCI+PC9wYXRoPgogICAgICAgIDxwYXRoIGQ9Ik0gNDUsMTAgSCA1NSBMIDUwLDIwIFoiIGZpbGw9IiMxMTE4MjciPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+",
+    },
+    {
+        name: "white_shorts",
+        thumbnail: "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIGZpbGw9Im5vbmUiPgogICAgICAgIDxyZWN0IGZpbGw9IiNGRkZGRkYiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48L3JlY3Q+CiAgICAgICAgPHBhdGggZD0iTSAzMCw1MCBMIDI1LDEwIEggNTUgTCA0NSw1MCBaIiBmaWxsPSIjZjhmYWZjIj48L3BhdGg+CiAgICAgICAgPHBhdGggZD0iTSA3MCw1MCBMIDc1LDEwIEggNDUgTCA1NSw1MCBaIiBmaWxsPSIjZjhmYWZjIj48L3BhdGg+CiAgICAgICAgPHBhdGggZD0iTSA0NSwxMCBIIDU1IEwgNTAsMjAgWiIgZmlsbD0iI2YxZjVmOSI+PC9wYXRoPgogICAgPC9nPgo8L3N2Zz4=",
+        segmented: "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIGZpbGw9Im5vbmUiPgogICAgICAgIDxwYXRoIGQ9Ik0gMzAsNTIgTCAyNSwxMiBIIDU1IEwgNDUsNTIgWiIgZmlsbD0iI2Y4ZmFmYyI+PC9wYXRoPgogICAgICAgIDxwYXRoIGQ9Ik0gNzAsNTIgTCA3NSwxMiBIIDQ1IEwgNTUsNTIgWiIgZmlsbD0iI2Y4ZmFmYyI+PC9wYXRoPgogICAgICAgIDxwYXRoIGQ9Ik0gNDUsMTIgSCA1NSBMIDUwLDIyIFoiIGZpbGw9IiNmMWY1ZjkiPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+",
+    }
 ];
-
-export const POSES: Pose[] = poseDefinitions.map(pose => ({
-  ...pose,
-  imageUrl: POSE_ICONS[pose.name],
-}));

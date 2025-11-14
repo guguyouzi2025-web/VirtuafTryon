@@ -15,7 +15,8 @@
     "processing": "处理中...",
     "browse": "浏览文件",
     "replaceGarment": "替换服装",
-    "downloadImage": "下载图片",
+    "download": "下载",
+    "downloadSelected": "下载所选",
     "refineAI": "AI 优化",
     "refineManual": "编辑",
     "refining": "优化中...",
@@ -23,6 +24,7 @@
     "applying": "应用中...",
     "saveChanges": "保存更改",
     "cancel": "取消",
+    "clearMask": "清除蒙版",
     "collect": "收藏",
     "remove": "移除",
     "swapModel": "更换模特",
@@ -31,7 +33,15 @@
     "random": "随机",
     "custom": "自定义",
     "close": "关闭",
-    "myCollection": "我的收藏"
+    "myCollection": "我的收藏",
+    "magicFix": "魔法修复",
+    "downloadHd": "高清 (2x)",
+    "downloadStandard": "标准 (1x)",
+    "downloadUhd": "超清 (4x)",
+    "comingSoon": "即将推出",
+    "upscaling": "高清处理中...",
+    "regeneratePose": "重新生成姿势",
+    "refineModel": "微调模特"
   },
   "modelCreation": {
     "title": "创建您的虚拟模特",
@@ -126,6 +136,11 @@
         "successTitle": "上传成功！",
         "successSubtitle": "准备试穿。上传另一件以替换。"
     },
+    "garmentLibrary": {
+      "title": "服装库",
+      "addNew": "添加新款",
+      "empty": "您的服装库是空的，请添加一件服装开始。"
+    },
     "segment": {
         "original": "原始图片",
         "segmented": "分割后",
@@ -140,7 +155,15 @@
     "previewPlaceholder": "您的最终图片将在此处显示。",
     "previewReady": "准备应用服装。",
     "finalImageAlt": "最终试穿效果",
-    "fabricType": "面料类型"
+    "fabricType": "面料类型",
+    "bottomsLibrary": "搭配下装"
+  },
+  "addGarmentModal": {
+    "title": "添加新服装",
+    "uploadStep": "1. 上传图片",
+    "reviewStep": "2. 检查分割效果",
+    "save": "保存至服装库",
+    "segmenting": "分割中..."
   },
   "errors": {
     "generateModels": "生成模特失败。请重试。",
@@ -155,7 +178,10 @@
     "smartMatchFailed": "智能匹配失败。请重试或手动创建模特。",
     "analyzeGarment": "分析服装风格失败，请重试。",
     "generationFailed": "生成失败。",
-    "safetyBlock": "生成失败，请尝试调整您的描述或设置。"
+    "safetyBlock": "生成失败，请尝试调整您的描述或设置。",
+    "inpaintFailed": "局部修复失败，请重试。",
+    "upscaleFailed": "高清化处理失败，请重试。",
+    "refineModelFailed": "模特微调失败，请重试。"
   },
   "swapModelModal": {
     "title": "更换模特",
@@ -185,6 +211,18 @@
     "noModels": "您的收藏中没有可选择的模特。",
     "error": "错误"
   },
+  "inpaintingModal": {
+    "title": "魔法修复 (局部重绘)",
+    "instruction": "用画笔涂抹您想修改的区域，然后输入文字描述您想看到的内容。",
+    "promptLabel": "描述您的修改",
+    "promptPlaceholder": "例如：把颜色改成红色"
+  },
+  "refineModelModal": {
+    "title": "微调模特",
+    "instruction": "使用画笔涂抹您想修改的模特区域（如头发、面部），然后描述您期望的变化。",
+    "promptLabel": "描述您的修改",
+    "promptPlaceholder": "例如：更自然的微笑，增加头发蓬松感"
+  },
   "myProjectsModal": {
     "title": "我的项目",
     "empty": "您没有已保存的项目。",
@@ -196,7 +234,25 @@
   "toasts": {
     "projectSaved": "项目已成功保存！",
     "projectLoaded": "项目已加载。",
-    "projectDeleted": "项目已删除。"
+    "projectDeleted": "项目已删除。",
+    "modelRefined": "模特已更新。选择姿势时将重新生成。"
+  },
+  "onboarding": {
+    "welcomeTitle": "欢迎来到工作区！",
+    "welcomeText": "本快速指南将引导您完成创建第一张虚拟试衣图的主要步骤。",
+    "step1Title": "第一步：选择姿势",
+    "step1Text": "首先，从左侧的库中为您的模特选择一个姿势。这将是您最终图像的基础。",
+    "step2Title": "第二步：您的服装",
+    "step2Text": "接下来，将一件服装添加到您的服装库中。您可以在这里上传自己衣服的图片。",
+    "step3Title": "第三步：应用服装",
+    "step3Text": "当您选好模特的姿势和服装后，点击此处让 AI 执行虚拟试穿。",
+    "step4Title": "第四步：预览和下载",
+    "step4Text": "您的最终图像会出现在预览面板中。您可以在这里使用编辑工具或下载您的作品。",
+    "finishTitle": "您已准备就绪！",
+    "finishText": "这就是基本的工作流程！欢迎探索其他强大功能，如更换模特、更换背景和批量生成。",
+    "next": "下一步",
+    "skip": "跳过教程",
+    "finish": "完成"
   },
   "backgroundPresets": {
     "studio_white": "白色影棚",
@@ -286,7 +342,16 @@
     "medium_wavy": "中长波浪",
     "long_straight": "长直发",
     "curly_afro": "爆炸卷发",
-    "slicked_back": "后梳"
+    "slicked_back": "后梳",
+    "high_ponytail": "高马尾",
+    "bun": "丸子头",
+    "buzz_cut": "寸头",
+    "undercut": "底切",
+    "side_part": "侧分",
+    "bob_cut": "波波头",
+    "braided_ponytail": "麻花辫马尾",
+    "crew_cut": "平头",
+    "messy_quiff": "凌乱顶发"
   },
   "eyeColors": {
     "brown": "棕色",
@@ -375,5 +440,10 @@
     "denim": "牛仔布",
     "leather": "皮革",
     "wool": "羊毛"
+  },
+  "bottomPresets": {
+    "blue_jeans": "蓝色牛仔裤",
+    "black_trousers": "黑色长裤",
+    "white_shorts": "白色短裤"
   }
 }
